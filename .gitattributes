@@ -1,1 +1,2 @@
+# Exclude HTML templates from language statistics
 *.html linguist-vendored=true
