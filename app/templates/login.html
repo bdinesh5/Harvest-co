@@ -1,0 +1,265 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Member Sign In — Harvest & Co.{% endblock %}
+
+{% block content %}
+<style>
+    .auth-container {
+        min-height: calc(100vh - 160px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4rem 1.5rem;
+    }
+
+    .auth-card {
+        background: #F6F1E8;
+        border: 1px solid rgba(38, 70, 52, 0.14);
+        border-radius: 24px;
+        width: 100%;
+        max-width: 460px;
+        padding: 3rem 2.5rem;
+        box-shadow: 0 16px 48px rgba(38, 70, 52, 0.08);
+        position: relative;
+    }
+
+    .auth-crest {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: var(--farm-green);
+        color: #FAF7EE;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.25rem;
+        box-shadow: 0 4px 14px rgba(38, 70, 52, 0.25);
+    }
+
+    .auth-crest svg {
+        width: 22px;
+        height: 22px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2;
+    }
+
+    .auth-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .auth-eyebrow {
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--farm-terracotta);
+        margin-bottom: 0.4rem;
+    }
+
+    .auth-title {
+        font-family: 'Fraunces', serif;
+        font-size: 2.2rem;
+        font-weight: 600;
+        color: var(--farm-green);
+        line-height: 1.15;
+    }
+
+    .auth-title em {
+        font-family: 'Cormorant Garamond', serif;
+        font-style: italic;
+        font-weight: 400;
+        color: var(--farm-soil-mid);
+    }
+
+    .auth-subtitle {
+        font-size: 0.85rem;
+        color: var(--farm-soil-light);
+        margin-top: 0.35rem;
+    }
+
+    .auth-input-box {
+        margin-bottom: 1.35rem;
+        position: relative;
+    }
+
+    .auth-label {
+        font-family: 'Jost', sans-serif;
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--farm-soil-mid);
+        margin-bottom: 0.4rem;
+        display: block;
+    }
+
+    .auth-input-field {
+        width: 100%;
+        background: #FAF7EE;
+        border: 1.5px solid rgba(38, 70, 52, 0.2);
+        border-radius: 10px;
+        padding: 0.85rem 1.1rem;
+        font-family: 'Jost', sans-serif;
+        font-size: 0.92rem;
+        color: var(--farm-soil);
+        outline: none;
+        transition: all 0.2s ease;
+    }
+
+    .auth-input-field:focus {
+        border-color: var(--farm-green);
+        background: #FFFFFF;
+        box-shadow: 0 0 0 3px rgba(38, 70, 52, 0.1);
+    }
+
+    .toggle-eye-btn {
+        position: absolute;
+        right: 14px;
+        bottom: 11px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--farm-soil-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .toggle-eye-btn:hover {
+        color: var(--farm-green);
+    }
+
+    .btn-auth-submit {
+        width: 100%;
+        background: var(--farm-green);
+        color: #FAF7EE;
+        border: none;
+        border-radius: 999px;
+        padding: 0.95rem;
+        font-family: 'Jost', sans-serif;
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 1.75rem;
+        box-shadow: 0 6px 18px rgba(38, 70, 52, 0.25);
+        transition: all 0.25s ease;
+    }
+
+    .btn-auth-submit:hover {
+        background: var(--farm-green-dark);
+        transform: translateY(-1px);
+        box-shadow: 0 8px 24px rgba(38, 70, 52, 0.35);
+    }
+
+    .auth-footer-link {
+        text-align: center;
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px dashed rgba(38, 70, 52, 0.12);
+        font-size: 0.85rem;
+        color: var(--farm-soil-light);
+    }
+
+    .auth-footer-link a {
+        color: var(--farm-terracotta);
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    .auth-footer-link a:hover {
+        text-decoration: underline;
+    }
+
+    .auth-error-banner {
+        background: rgba(200, 90, 50, 0.1);
+        border-left: 3px solid var(--farm-terracotta);
+        color: var(--farm-terracotta-dark);
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        font-size: 0.82rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+</style>
+
+<div class="auth-container">
+    <div class="auth-card reveal">
+
+        <div class="auth-crest">
+            <svg viewBox="0 0 24 24">
+                <path d="M12 2L9.5 8.5C8 12.5 5 15 2 16c3.5 1 7.5 0 10-3 2.5 3 6.5 4 10 3-3-1-6-3.5-7.5-7.5L12 2z"></path>
+                <path d="M12 13v9"></path>
+            </svg>
+        </div>
+
+        <div class="auth-header">
+            <div class="auth-eyebrow">Harvest &amp; Co. Collective</div>
+            <h1 class="auth-title">Member <em>Sign In</em></h1>
+            <p class="auth-subtitle">Access your fresh morning harvest &amp; orders</p>
+        </div>
+
+        {% if error %}
+        <div class="auth-error-banner">
+            <span>⚠️</span>
+            <span>{{ error }}</span>
+        </div>
+        {% endif %}
+
+        <form method="POST" action="{% url 'login' %}">
+            {% csrf_token %}
+
+            <div class="auth-input-box">
+                <label class="auth-label" for="username">Username</label>
+                <input class="auth-input-field" type="text" id="username" name="username" placeholder="Enter your username" autocomplete="username" required>
+            </div>
+
+            <div class="auth-input-box">
+                <label class="auth-label" for="password">Password</label>
+                <input class="auth-input-field" type="password" id="password" name="password" placeholder="••••••••" autocomplete="current-password" required>
+                <button type="button" class="toggle-eye-btn" onclick="toggleAuthPw('password', this)" title="Show/hide password">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                </button>
+            </div>
+
+            <button type="submit" class="btn-auth-submit">
+                <span>Sign In to Pantry</span>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+            </button>
+        </form>
+
+        <div class="auth-footer-link">
+            New to our organic collective?
+            <a href="{% url 'signup' %}">Create Account</a>
+        </div>
+
+    </div>
+</div>
+
+<script>
+function toggleAuthPw(id, btn) {
+    const input = document.getElementById(id);
+    if (!input) return;
+    const isText = input.type === 'text';
+    input.type = isText ? 'password' : 'text';
+    btn.innerHTML = isText
+        ? `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`
+        : `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`;
+}
+</script>
+{% endblock %}

@@ -1,0 +1,387 @@
+{% extends 'base.html' %}
+{% load star_tags %}
+{% load static %}
+{% block title %}{{ product.name }} — Harvest & Co.{% endblock %}
+
+{% block content %}
+<style>
+    .pd-container {
+        padding: 4rem 0 6rem;
+    }
+
+    .pd-breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.76rem;
+        font-weight: 500;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--farm-soil-light);
+        margin-bottom: 2.5rem;
+    }
+
+    .pd-breadcrumb a {
+        color: var(--farm-green);
+        text-decoration: none;
+    }
+
+    .pd-breadcrumb a:hover {
+        color: var(--farm-terracotta);
+    }
+
+    .pd-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        align-items: start;
+    }
+
+    /* Product image frame */
+    .pd-image-frame {
+        background: #F3ECE0;
+        border: 1px solid rgba(38, 70, 52, 0.15);
+        border-radius: 20px;
+        position: relative;
+        overflow: hidden;
+        aspect-ratio: 1;
+        box-shadow: 0 16px 40px rgba(38, 70, 52, 0.08);
+    }
+
+    .pd-image-frame img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .pd-badge-stamp {
+        position: absolute;
+        top: 1.25rem;
+        left: 1.25rem;
+        padding: 0.35rem 0.85rem;
+        border-radius: 8px;
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        background: var(--farm-green);
+        color: #FAF7EE;
+        box-shadow: 0 4px 12px rgba(38, 70, 52, 0.2);
+    }
+
+    /* Info Column */
+    .pd-category-tag {
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--farm-terracotta);
+        margin-bottom: 0.5rem;
+    }
+
+    .pd-title {
+        font-family: 'Fraunces', serif;
+        font-size: clamp(2.4rem, 4vw, 3.4rem);
+        font-weight: 600;
+        color: var(--farm-green);
+        line-height: 1.1;
+        margin-bottom: 0.85rem;
+    }
+
+    .pd-price-row {
+        display: flex;
+        align-items: baseline;
+        gap: 0.6rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1.25rem;
+        border-bottom: 1px dashed rgba(38, 70, 52, 0.15);
+    }
+
+    .pd-price-val {
+        font-family: 'Fraunces', serif;
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: var(--farm-soil);
+    }
+
+    .pd-price-unit {
+        font-size: 0.85rem;
+        color: var(--farm-soil-light);
+    }
+
+    .pd-desc {
+        font-size: 0.95rem;
+        line-height: 1.8;
+        color: var(--farm-soil-mid);
+        margin-bottom: 2rem;
+    }
+
+    /* Chef tip callout */
+    .pd-farm-note {
+        background: #F3ECE0;
+        border-left: 3px solid var(--farm-terracotta);
+        padding: 1rem 1.25rem;
+        border-radius: 0 12px 12px 0;
+        margin-bottom: 2rem;
+    }
+
+    .pd-farm-note-title {
+        font-family: 'Caveat', cursive;
+        font-size: 1.25rem;
+        color: var(--farm-terracotta);
+        margin-bottom: 0.2rem;
+    }
+
+    .pd-farm-note-text {
+        font-size: 0.85rem;
+        color: var(--farm-soil-mid);
+        line-height: 1.6;
+    }
+
+    /* Actions */
+    .pd-action-row {
+        display: flex;
+        align-items: center;
+        gap: 1.25rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .btn-add-main-pd {
+        flex: 1;
+        background: var(--farm-green);
+        color: #FAF7EE;
+        border: none;
+        border-radius: 999px;
+        padding: 1rem 2rem;
+        font-family: 'Jost', sans-serif;
+        font-size: 0.82rem;
+        font-weight: 600;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.65rem;
+        box-shadow: 0 8px 24px rgba(38, 70, 52, 0.25);
+        transition: all 0.3s ease;
+    }
+
+    .btn-add-main-pd:hover {
+        background: var(--farm-green-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 12px 30px rgba(38, 70, 52, 0.35);
+    }
+
+    .btn-wish-pd {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: var(--farm-cream);
+        border: 1.5px solid rgba(38, 70, 52, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: var(--farm-soil-mid);
+        transition: all 0.25s ease;
+    }
+
+    .btn-wish-pd:hover,
+    .btn-wish-pd.wishlisted {
+        background: #FAF7EE;
+        border-color: var(--farm-terracotta);
+        color: var(--farm-terracotta);
+        transform: scale(1.08);
+    }
+
+    .btn-wish-pd.wishlisted svg {
+        fill: var(--farm-terracotta);
+    }
+
+    /* Trust highlights */
+    .pd-trust-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        background: rgba(38, 70, 52, 0.04);
+        padding: 1.25rem;
+        border-radius: 12px;
+        border: 1px dashed rgba(38, 70, 52, 0.15);
+    }
+
+    .pd-trust-cell {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        font-size: 0.8rem;
+        color: var(--farm-soil-mid);
+        font-weight: 500;
+    }
+
+    @media (max-width: 991px) {
+        .pd-layout {
+            grid-template-columns: 1fr;
+            gap: 2.5rem;
+        }
+    }
+</style>
+
+<div class="pd-container">
+    <div class="container">
+
+        <!-- Breadcrumb -->
+        <div class="pd-breadcrumb">
+            <a href="{% url 'home' %}">Home</a>
+            <span>›</span>
+            <a href="{% url 'marketplace' %}">Marketplace</a>
+            <span>›</span>
+            <a href="{% url 'marketplace' %}?category={{ product.category.id }}">{{ product.category.name }}</a>
+            <span>›</span>
+            <span style="color: var(--farm-soil);">{{ product.name }}</span>
+        </div>
+
+        <div class="pd-layout">
+
+            <!-- Left: Image Frame -->
+            <div class="pd-image-frame">
+                {% if product.is_sale %}
+                <span class="pd-badge-stamp" style="background: var(--farm-terracotta);">Seasonal Harvest Deal</span>
+                {% else %}
+                <span class="pd-badge-stamp">100% Certified Organic</span>
+                {% endif %}
+
+                {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                {% else %}
+                <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 5rem;">🌾</div>
+                {% endif %}
+            </div>
+
+            <!-- Right: Product Info -->
+            <div>
+                <div class="pd-category-tag">
+                    {{ product.category.name }}{% if product.subcategory %} • {{ product.subcategory.name }}{% endif %}
+                </div>
+
+                <h1 class="pd-title">{{ product.name }}</h1>
+
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem;">
+                    {% stars product.rating %}
+                    <span style="font-size: 0.78rem; color: var(--farm-soil-light);">• Harvest Verified</span>
+                </div>
+
+                <div class="pd-price-row">
+                    <span class="pd-price-val">₹{{ product.price }}</span>
+                    <span class="pd-price-unit">/ farm pack</span>
+                </div>
+
+                <p class="pd-desc">
+                    {{ product.description|default:"Sourced fresh at dawn from our organic farm partners. Free of synthetic chemicals, ripened naturally under the sun, and handled with utmost care to retain maximum nutrition and flavor." }}
+                </p>
+
+                <!-- Farmer & Chef Note -->
+                <div class="pd-farm-note">
+                    <div class="pd-farm-note-title">🌱 Grower's Storage Tip</div>
+                    <div class="pd-farm-note-text">
+                        Store in a cool, ventilated area or refrigerate in a breathable cloth bag to preserve peak crispness and natural morning aroma for up to 5 days.
+                    </div>
+                </div>
+
+                <!-- Action Button Row -->
+                <div class="pd-action-row">
+                    <button class="btn-add-main-pd" id="pdAddBtn" onclick="addFarmCartPD({{ product.id }})">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        <span>Add to Harvest Basket</span>
+                    </button>
+
+                    <button class="btn-wish-pd {% if in_wishlist %}wishlisted{% endif %}"
+                            onclick="toggleFarmWishlistPD({{ product.id }}, this)"
+                            title="Save to Wishlist">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Trust Badges -->
+                <div class="pd-trust-grid">
+                    <div class="pd-trust-cell">
+                        <span>🚜</span>
+                        <span>Direct Farm Harvest</span>
+                    </div>
+                    <div class="pd-trust-cell">
+                        <span>🌿</span>
+                        <span>0% Chemical Sprays</span>
+                    </div>
+                    <div class="pd-trust-cell">
+                        <span>📦</span>
+                        <span>Plastic-Free Kraft Bag</span>
+                    </div>
+                    <div class="pd-trust-cell">
+                        <span>⚡</span>
+                        <span>Same-Day Farm Delivery</span>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script>
+function addFarmCartPD(productId) {
+    const btn = document.getElementById('pdAddBtn');
+    const orig = btn.innerHTML;
+    btn.innerHTML = `<span>Adding to Basket...</span>`;
+
+    fetch(`/cart/add/${productId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'X-Requested-With': 'XMLHttpRequest',
+        }
+    })
+    .then(r => r.json())
+    .then(data => {
+        btn.innerHTML = `<span>✓ Added to Basket</span>`;
+        btn.style.background = 'var(--farm-terracotta)';
+        const badge = document.getElementById('navCartBadge');
+        if (badge) {
+            badge.innerText = data.count;
+            badge.classList.add('visible');
+        }
+        showFarmToast('Added {{ product.name }} to basket!', '🧺');
+        setTimeout(() => {
+            btn.innerHTML = orig;
+            btn.style.background = 'var(--farm-green)';
+        }, 1800);
+    });
+}
+
+function toggleFarmWishlistPD(productId, btn) {
+    fetch(`/wishlist/toggle/${productId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'X-Requested-With': 'XMLHttpRequest',
+        }
+    })
+    .then(r => r.json())
+    .then(data => {
+        btn.classList.toggle('wishlisted', data.wishlisted);
+        showFarmToast(data.wishlisted ? 'Saved to your farm wishlist!' : 'Removed from wishlist', '❤️');
+        const badge = document.getElementById('navWishlistBadge');
+        if (badge) {
+            badge.innerText = data.count;
+            badge.classList.toggle('visible', data.count > 0);
+        }
+    });
+}
+</script>
+{% endblock %}

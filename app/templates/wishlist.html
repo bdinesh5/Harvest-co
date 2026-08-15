@@ -1,0 +1,361 @@
+{% extends 'base.html' %}
+{% load star_tags %}
+{% load static %}
+{% block title %}My Saved Favorites — Harvest & Co.{% endblock %}
+
+{% block content %}
+<style>
+    .wl-page-wrap {
+        padding: 3.5rem 0 6rem;
+    }
+
+    .wl-hero-header {
+        margin-bottom: 2.5rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid rgba(38, 70, 52, 0.12);
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .wl-title {
+        font-family: 'Fraunces', serif;
+        font-size: clamp(2.2rem, 4vw, 3rem);
+        font-weight: 600;
+        color: var(--farm-green);
+        margin-bottom: 0.35rem;
+    }
+
+    .wl-title em {
+        font-family: 'Cormorant Garamond', serif;
+        font-style: italic;
+        font-weight: 400;
+        color: var(--farm-terracotta);
+    }
+
+    .wl-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 2rem;
+    }
+
+    .wl-card {
+        background: #F6F1E8;
+        border: 1px solid rgba(38, 70, 52, 0.12);
+        border-radius: 16px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        transition: all 0.35s cubic-bezier(0.2, 0.8, 0.4, 1);
+    }
+
+    .wl-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 16px 40px rgba(38, 70, 52, 0.12);
+        border-color: rgba(38, 70, 52, 0.25);
+    }
+
+    .wl-card-media {
+        position: relative;
+        aspect-ratio: 1.05;
+        overflow: hidden;
+        background: #EFE8DA;
+    }
+
+    .wl-card-media img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .wl-card:hover .wl-card-media img {
+        transform: scale(1.08);
+    }
+
+    .wl-remove-btn {
+        position: absolute;
+        top: 0.85rem;
+        right: 0.85rem;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: #FAF7EE;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 2;
+        color: var(--farm-terracotta);
+        box-shadow: 0 4px 12px rgba(38, 70, 52, 0.15);
+        transition: all 0.2s ease;
+    }
+
+    .wl-remove-btn:hover {
+        transform: scale(1.15);
+        background: #FFFFFF;
+    }
+
+    .wl-remove-btn svg {
+        fill: var(--farm-terracotta);
+        stroke: var(--farm-terracotta);
+        width: 16px;
+        height: 16px;
+    }
+
+    .wl-badge {
+        position: absolute;
+        top: 0.85rem;
+        left: 0.85rem;
+        padding: 0.25rem 0.65rem;
+        border-radius: 6px;
+        font-size: 0.62rem;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        background: var(--farm-green);
+        color: #FAF7EE;
+        z-index: 2;
+    }
+
+    .wl-card-body {
+        padding: 1.25rem 1.25rem 1.4rem;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+    }
+
+    .wl-cat-tag {
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--farm-soil-light);
+        margin-bottom: 0.35rem;
+    }
+
+    .wl-prod-title {
+        font-family: 'Fraunces', serif;
+        font-size: 1.22rem;
+        font-weight: 600;
+        color: var(--farm-green);
+        text-decoration: none;
+        line-height: 1.25;
+        margin-bottom: 0.4rem;
+    }
+
+    .wl-prod-title:hover {
+        color: var(--farm-terracotta);
+    }
+
+    .wl-price-row {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        margin-top: auto;
+        padding-top: 0.85rem;
+        margin-bottom: 1.1rem;
+        border-top: 1px dashed rgba(38, 70, 52, 0.12);
+    }
+
+    .wl-price-val {
+        font-family: 'Fraunces', serif;
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: var(--farm-soil);
+    }
+
+    .btn-wl-add {
+        width: 100%;
+        background: var(--farm-green);
+        color: #FAF7EE;
+        border: none;
+        border-radius: 999px;
+        padding: 0.75rem 1rem;
+        font-family: 'Jost', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        transition: all 0.25s ease;
+    }
+
+    .btn-wl-add:hover {
+        background: var(--farm-green-dark);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 14px rgba(38, 70, 52, 0.25);
+    }
+
+    .btn-wl-add.in-basket {
+        background: var(--farm-green-light);
+    }
+
+    .wl-empty-box {
+        text-align: center;
+        padding: 5rem 2rem;
+        background: #F6F1E8;
+        border: 2px dashed rgba(38, 70, 52, 0.18);
+        border-radius: 20px;
+    }
+</style>
+
+<div class="wl-page-wrap">
+    <div class="container">
+
+        <div class="wl-hero-header">
+            <div>
+                <div style="font-size: 0.7rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--farm-terracotta); margin-bottom: 0.35rem;">
+                    Personal Pantry
+                </div>
+                <h1 class="wl-title">Saved <em>Favorites</em></h1>
+                <p style="color: var(--farm-soil-light); font-size: 0.88rem; margin: 0;">
+                    Your handpicked selection of fresh daily greens, fruits, cold-pressed oils, and farm staples.
+                </p>
+            </div>
+
+            {% if items %}
+            <div style="font-family: 'Fraunces', serif; font-size: 1.1rem; color: var(--farm-green);">
+                {{ items.count }} item{{ items.count|pluralize }} saved
+            </div>
+            {% endif %}
+        </div>
+
+        {% if items %}
+        <div class="wl-grid">
+            {% for item in items %}
+            <div class="wl-card reveal" id="wlCard-{{ item.product.id }}">
+                <div class="wl-card-media">
+                    <span class="wl-badge">100% Organic</span>
+
+                    <!-- Remove Button -->
+                    <button class="wl-remove-btn"
+                            onclick="removeWLItem({{ item.product.id }})"
+                            title="Remove from favorites">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        </svg>
+                    </button>
+
+                    {% if item.product.image %}
+                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                    {% else %}
+                    <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 3rem;">🌾</div>
+                    {% endif %}
+                </div>
+
+                <div class="wl-card-body">
+                    <div class="wl-cat-tag">
+                        {{ item.product.category.name }}{% if item.product.subcategory %} › {{ item.product.subcategory.name }}{% endif %}
+                    </div>
+
+                    <a href="{% url 'product_detail' item.product.id %}" class="wl-prod-title">
+                        {{ item.product.name }}
+                    </a>
+
+                    <div style="margin-bottom: 0.4rem;">
+                        {% stars item.product.rating %}
+                    </div>
+
+                    <div class="wl-price-row">
+                        <span class="wl-price-val">₹{{ item.product.price }}</span>
+                        <span style="font-size: 0.74rem; color: var(--farm-soil-light);">/ pack</span>
+                    </div>
+
+                    <button class="btn-wl-add {% if item.product.id in cart_ids %}in-basket{% endif %}"
+                            onclick="addFarmCartWL({{ item.product.id }}, this)">
+                        {% if item.product.id in cart_ids %}
+                        <span>✓ In Basket</span>
+                        {% else %}
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        <span>Add to Basket</span>
+                        {% endif %}
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="wl-empty-box">
+            <div style="font-size: 3.5rem; margin-bottom: 1rem;">❤️</div>
+            <h2 style="font-family: 'Fraunces', serif; color: var(--farm-green); font-size: 2rem; margin-bottom: 0.5rem;">
+                No Saved Favorites Yet
+            </h2>
+            <p style="color: var(--farm-soil-light); font-size: 0.95rem; max-width: 460px; margin: 0 auto 2rem; line-height: 1.6;">
+                Click the heart icon on any fresh farm produce card to save it here for fast re-ordering.
+            </p>
+            <a href="{% url 'marketplace' %}" class="btn-harvest-main" style="display: inline-flex;">
+                <span>Explore Today's Market Produce</span>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+            </a>
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+
+<script>
+function removeWLItem(productId) {
+    fetch(`/wishlist/toggle/${productId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'X-Requested-With': 'XMLHttpRequest',
+        }
+    })
+    .then(r => r.json())
+    .then(data => {
+        const card = document.getElementById(`wlCard-${productId}`);
+        if (card) card.remove();
+        const badge = document.getElementById('navWishlistBadge');
+        if (badge) {
+            badge.innerText = data.count;
+            badge.classList.toggle('visible', data.count > 0);
+        }
+        showFarmToast('Removed from saved favorites', '🤍');
+        if (data.count === 0) window.location.reload();
+    });
+}
+
+function addFarmCartWL(productId, btn) {
+    const orig = btn.innerHTML;
+    btn.innerHTML = `<span>Adding...</span>`;
+
+    fetch(`/cart/add/${productId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'X-Requested-With': 'XMLHttpRequest',
+        }
+    })
+    .then(r => r.json())
+    .then(data => {
+        btn.innerHTML = `<span>✓ In Basket</span>`;
+        btn.classList.add('in-basket');
+        const badge = document.getElementById('navCartBadge');
+        if (badge) {
+            badge.innerText = data.count;
+            badge.classList.add('visible');
+        }
+        showFarmToast('Added fresh produce to your basket!', '🧺');
+    })
+    .catch(() => {
+        btn.innerHTML = orig;
+    });
+}
+</script>
+{% endblock %}

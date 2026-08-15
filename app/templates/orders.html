@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}My Harvest Orders — Harvest & Co.{% endblock %}
+
+{% block content %}
+<style>
+    .orders-wrap-farm {
+        padding: 4rem 0 6rem;
+    }
+
+    .order-card-farm {
+        background: #F6F1E8;
+        border: 1px solid rgba(38, 70, 52, 0.12);
+        border-radius: 16px;
+        padding: 1.75rem 2rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+        transition: all 0.3s ease;
+    }
+
+    .order-card-farm:hover {
+        border-color: var(--farm-green);
+        box-shadow: 0 8px 24px rgba(38, 70, 52, 0.08);
+        transform: translateY(-2px);
+    }
+</style>
+
+<div class="orders-wrap-farm">
+    <div class="container" style="max-width: 900px;">
+
+        <h1 style="font-family: 'Fraunces', serif; font-size: clamp(2.2rem, 4vw, 3rem); font-weight: 600; color: var(--farm-green); margin-bottom: 0.35rem;">
+            My Harvest <em>Orders</em>
+        </h1>
+        <p style="color: var(--farm-soil-light); font-size: 0.88rem; margin-bottom: 2.5rem;">
+            View historical farm produce orders, download official tax receipts, and track active deliveries.
+        </p>
+
+        {% if orders %}
+        <div>
+            {% for order in orders %}
+            <div class="order-card-farm reveal">
+                <div>
+                    <div style="font-size: 0.72rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--farm-soil-light); margin-bottom: 0.25rem;">
+                        Order #{{ order.id }} • {{ order.created_at|date:"d M Y" }}
+                    </div>
+                    <div style="font-family: 'Fraunces', serif; font-size: 1.3rem; font-weight: 700; color: var(--farm-soil);">
+                        ₹{{ order.grand_total }}
+                    </div>
+                    <div style="font-size: 0.78rem; color: var(--farm-soil-mid); margin-top: 0.2rem;">
+                        {{ order.items.count }} produce item{{ order.items.count|pluralize }} • Delivered to {{ order.city }}
+                    </div>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 0.85rem; flex-wrap: wrap;">
+                    <span style="background: var(--farm-green-soft); color: var(--farm-green); font-size: 0.72rem; font-weight: 600; padding: 0.3rem 0.85rem; border-radius: 999px; text-transform: uppercase;">
+                        {{ order.get_status_display }}
+                    </span>
+
+                    <a href="{% url 'order_detail' order.id %}" class="btn-harvest-main" style="padding: 0.55rem 1.25rem; font-size: 0.72rem;">
+                        Track Order →
+                    </a>
+                    <a href="{% url 'order_pdf' order.id %}" class="btn-harvest-outline" style="padding: 0.55rem 1rem; font-size: 0.72rem; color: var(--farm-green); border-color: rgba(38,70,52,0.3);">
+                        ↓ Invoice
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div style="text-align: center; padding: 5rem 2rem; background: #F6F1E8; border: 2px dashed rgba(38,70,52,0.15); border-radius: 20px;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">🌱</div>
+            <h2 style="font-family: 'Fraunces', serif; color: var(--farm-green);">No Orders Yet</h2>
+            <p style="color: var(--farm-soil-light); font-size: 0.9rem; margin-bottom: 1.5rem;">Explore today's morning harvest and make your first organic order.</p>
+            <a href="{% url 'marketplace' %}" class="btn-harvest-main" style="display: inline-flex;">
+                Shop Fresh Produce →
+            </a>
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+{% endblock %}

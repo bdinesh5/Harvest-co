@@ -1,0 +1,713 @@
+{% extends 'base.html' %}
+{% load star_tags %}
+{% load static %}
+{% block title %}Harvest & Co. — Fresh Farm-to-Table Organic Grocer{% endblock %}
+
+{% block content %}
+<style>
+    /* ══════════════════════════════════════════
+       HERO — Editorial Farm Harvest Banner
+    ══════════════════════════════════════════ */
+    .farm-hero {
+        background: var(--farm-green-dark);
+        min-height: 85vh;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        padding: 5rem 0 4.5rem;
+    }
+
+    .farm-hero::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+            radial-gradient(ellipse 70% 60% at 15% 50%, rgba(58, 107, 75, 0.45) 0%, transparent 60%),
+            radial-gradient(ellipse 50% 50% at 85% 20%, rgba(200, 90, 50, 0.25) 0%, transparent 55%),
+            radial-gradient(ellipse 40% 40% at 50% 95%, rgba(212, 155, 75, 0.15) 0%, transparent 50%);
+        pointer-events: none;
+    }
+
+    .farm-hero-deco {
+        position: absolute;
+        right: 2%;
+        bottom: -2rem;
+        font-family: 'Fraunces', serif;
+        font-size: clamp(8rem, 18vw, 18rem);
+        font-weight: 700;
+        color: rgba(250, 247, 238, 0.03);
+        line-height: 1;
+        pointer-events: none;
+        user-select: none;
+    }
+
+    .farm-hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(250, 247, 238, 0.1);
+        border: 1px solid rgba(250, 247, 238, 0.2);
+        color: var(--farm-cream);
+        padding: 0.35rem 0.95rem;
+        border-radius: 999px;
+        font-size: 0.72rem;
+        font-weight: 500;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        margin-bottom: 1.5rem;
+        backdrop-filter: blur(8px);
+    }
+
+    .farm-hero-badge span.dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--farm-gold);
+        display: inline-block;
+        box-shadow: 0 0 8px var(--farm-gold);
+    }
+
+    .farm-hero-title {
+        font-family: 'Fraunces', serif;
+        font-size: clamp(2.8rem, 6.5vw, 5.2rem);
+        font-weight: 600;
+        color: var(--farm-cream);
+        line-height: 1.08;
+        letter-spacing: -0.02em;
+        margin-bottom: 1.25rem;
+    }
+
+    .farm-hero-title em {
+        font-family: 'Cormorant Garamond', serif;
+        font-style: italic;
+        font-weight: 400;
+        color: var(--farm-gold);
+    }
+
+    .farm-hero-sub {
+        font-size: clamp(0.9rem, 1.3vw, 1.05rem);
+        color: rgba(250, 247, 238, 0.78);
+        line-height: 1.7;
+        max-width: 580px;
+        margin-bottom: 2.25rem;
+        font-weight: 300;
+    }
+
+    .farm-hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 1.25rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .btn-harvest-main {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.65rem;
+        background: var(--farm-terracotta);
+        color: var(--farm-cream);
+        font-family: 'Jost', sans-serif;
+        font-size: 0.78rem;
+        font-weight: 600;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        padding: 0.95rem 2rem;
+        border-radius: 999px;
+        text-decoration: none;
+        box-shadow: 0 8px 24px rgba(200, 90, 50, 0.35);
+        transition: all 0.3s cubic-bezier(0.2, 0.8, 0.4, 1);
+    }
+
+    .btn-harvest-main:hover {
+        background: var(--farm-terracotta-dark);
+        color: var(--farm-cream);
+        transform: translateY(-3px);
+        box-shadow: 0 12px 30px rgba(200, 90, 50, 0.45);
+    }
+
+    .btn-harvest-outline {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: transparent;
+        color: var(--farm-cream);
+        font-family: 'Jost', sans-serif;
+        font-size: 0.78rem;
+        font-weight: 500;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        padding: 0.95rem 1.75rem;
+        border-radius: 999px;
+        border: 1.5px solid rgba(250, 247, 238, 0.35);
+        text-decoration: none;
+        transition: all 0.25s ease;
+    }
+
+    .btn-harvest-outline:hover {
+        background: rgba(250, 247, 238, 0.1);
+        border-color: var(--farm-cream);
+        color: var(--farm-cream);
+    }
+
+    .hero-tags-strip {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .hero-tags-label {
+        font-family: 'Caveat', cursive;
+        font-size: 1.15rem;
+        color: var(--farm-gold);
+        margin-right: 0.5rem;
+    }
+
+    .hero-tag-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        background: rgba(250, 247, 238, 0.08);
+        border: 1px solid rgba(250, 247, 238, 0.15);
+        color: rgba(250, 247, 238, 0.85);
+        padding: 0.25rem 0.75rem;
+        border-radius: 999px;
+        font-size: 0.72rem;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .hero-tag-pill:hover {
+        background: rgba(250, 247, 238, 0.18);
+        color: var(--farm-cream);
+        transform: translateY(-1px);
+    }
+
+    /* ══════════════════════════════════════════
+       SECTION HEADERS
+    ══════════════════════════════════════════ */
+    .section-header-farm {
+        text-align: center;
+        margin-bottom: 3.5rem;
+    }
+
+    .section-eyebrow-farm {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        font-family: 'Jost', sans-serif;
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.25em;
+        text-transform: uppercase;
+        color: var(--farm-terracotta);
+        margin-bottom: 0.6rem;
+    }
+
+    .section-eyebrow-farm::before,
+    .section-eyebrow-farm::after {
+        content: '';
+        display: inline-block;
+        width: 24px;
+        height: 1px;
+        background: var(--farm-terracotta);
+    }
+
+    .section-title-farm {
+        font-family: 'Fraunces', serif;
+        font-size: clamp(2.2rem, 4.5vw, 3.2rem);
+        font-weight: 600;
+        color: var(--farm-green);
+        line-height: 1.15;
+    }
+
+    .section-title-farm em {
+        font-family: 'Cormorant Garamond', serif;
+        font-style: italic;
+        font-weight: 400;
+        color: var(--farm-soil-mid);
+    }
+
+    .section-sub-farm {
+        font-size: 0.88rem;
+        color: var(--farm-soil-light);
+        margin-top: 0.5rem;
+        max-width: 520px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* ══════════════════════════════════════════
+       CATEGORY CIRCLES SHOWCASE
+    ══════════════════════════════════════════ */
+    .farm-categories-section {
+        padding: 6rem 0 4rem;
+    }
+
+    .farm-cat-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        text-decoration: none;
+        group: true;
+        transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.4, 1);
+    }
+
+    .farm-cat-card:hover {
+        transform: translateY(-6px);
+    }
+
+    .farm-cat-circle {
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        position: relative;
+        overflow: hidden;
+        background: var(--farm-kraft);
+        border: 3px solid #FAF7EE;
+        box-shadow: 0 8px 24px rgba(38, 70, 52, 0.1);
+        margin-bottom: 1.25rem;
+        transition: all 0.4s ease;
+    }
+
+    .farm-cat-card:hover .farm-cat-circle {
+        border-color: var(--farm-green);
+        box-shadow: 0 14px 36px rgba(38, 70, 52, 0.2);
+    }
+
+    .farm-cat-circle img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.4, 1);
+    }
+
+    .farm-cat-card:hover .farm-cat-circle img {
+        transform: scale(1.1);
+    }
+
+    .farm-cat-name {
+        font-family: 'Fraunces', serif;
+        font-size: 1.15rem;
+        font-weight: 600;
+        color: var(--farm-green);
+        margin-bottom: 0.25rem;
+        transition: color 0.25s ease;
+    }
+
+    .farm-cat-card:hover .farm-cat-name {
+        color: var(--farm-terracotta);
+    }
+
+    .farm-cat-tag {
+        font-family: 'Caveat', cursive;
+        font-size: 0.95rem;
+        color: var(--farm-gold);
+    }
+
+    /* ══════════════════════════════════════════
+       PRODUCT HARVEST GRID (Kraft Specimen Cards)
+    ══════════════════════════════════════════ */
+    .farm-products-section {
+        padding: 4rem 0 6rem;
+    }
+
+    .farm-product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 2rem;
+    }
+
+    .farm-pcard {
+        background: #F6F0E6;
+        border: 1px solid rgba(38, 70, 52, 0.1);
+        border-radius: 16px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        transition: all 0.4s cubic-bezier(0.2, 0.8, 0.4, 1);
+    }
+
+    .farm-pcard:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 16px 40px rgba(38, 70, 52, 0.12);
+        border-color: rgba(38, 70, 52, 0.22);
+    }
+
+    .farm-pcard-media {
+        position: relative;
+        aspect-ratio: 1.05;
+        overflow: hidden;
+        background: #EFE8D8;
+    }
+
+    .farm-pcard-media img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.4, 1);
+    }
+
+    .farm-pcard:hover .farm-pcard-media img {
+        transform: scale(1.06);
+    }
+
+    .farm-pcard-badge {
+        position: absolute;
+        top: 0.85rem;
+        left: 0.85rem;
+        padding: 0.25rem 0.65rem;
+        border-radius: 6px;
+        font-size: 0.62rem;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        z-index: 2;
+    }
+
+    .badge-organic {
+        background: var(--farm-green);
+        color: #FAF7EE;
+    }
+
+    .badge-harvest-sale {
+        background: var(--farm-terracotta);
+        color: #FAF7EE;
+    }
+
+    .farm-pcard-wish {
+        position: absolute;
+        top: 0.85rem;
+        right: 0.85rem;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: rgba(250, 247, 238, 0.9);
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 2;
+        transition: all 0.25s ease;
+        backdrop-filter: blur(4px);
+        color: var(--farm-green);
+    }
+
+    .farm-pcard-wish:hover {
+        background: #FAF7EE;
+        transform: scale(1.1);
+        color: var(--farm-terracotta);
+    }
+
+    .farm-pcard-body {
+        padding: 1.25rem 1.25rem 1.4rem;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+    }
+
+    .farm-pcard-cat {
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--farm-soil-light);
+        margin-bottom: 0.35rem;
+    }
+
+    .farm-pcard-title {
+        font-family: 'Fraunces', serif;
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--farm-green);
+        margin-bottom: 0.4rem;
+        line-height: 1.25;
+        text-decoration: none;
+    }
+
+    .farm-pcard-title:hover {
+        color: var(--farm-terracotta);
+    }
+
+    .farm-pcard-price-row {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        margin-top: auto;
+        padding-top: 0.75rem;
+        margin-bottom: 1rem;
+        border-top: 1px dashed rgba(38, 70, 52, 0.12);
+    }
+
+    .farm-price {
+        font-family: 'Fraunces', serif;
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: var(--farm-soil);
+    }
+
+    .farm-unit {
+        font-family: 'Jost', sans-serif;
+        font-size: 0.72rem;
+        color: var(--farm-soil-light);
+        margin-left: 0.2rem;
+    }
+
+    .btn-add-basket {
+        width: 100%;
+        background: var(--farm-green);
+        color: var(--farm-cream);
+        border: none;
+        border-radius: 999px;
+        padding: 0.75rem 1rem;
+        font-family: 'Jost', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        transition: all 0.25s ease;
+    }
+
+    .btn-add-basket:hover {
+        background: var(--farm-green-dark);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 14px rgba(38, 70, 52, 0.25);
+    }
+
+    /* ══════════════════════════════════════════
+       FARM HARVEST BOX BANNER
+    ══════════════════════════════════════════ */
+    .farm-box-banner {
+        background: #EDE4D0;
+        border: 2px dashed rgba(38, 70, 52, 0.2);
+        border-radius: 24px;
+        padding: 4rem 3rem;
+        margin: 3rem 0;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .farm-box-banner h3 {
+        font-family: 'Fraunces', serif;
+        font-size: clamp(2rem, 3.5vw, 2.8rem);
+        font-weight: 600;
+        color: var(--farm-green);
+        margin-bottom: 0.8rem;
+    }
+
+    .farm-box-banner p {
+        font-size: 0.95rem;
+        color: var(--farm-soil-mid);
+        max-width: 480px;
+        margin-bottom: 1.75rem;
+        line-height: 1.7;
+    }
+</style>
+
+<!-- ── HERO SECTION ── -->
+<section class="farm-hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+
+                <div class="farm-hero-badge">
+                    <span class="dot"></span>
+                    <span>Morning Harvest: Picked 5:00 AM Today</span>
+                </div>
+
+                <h1 class="farm-hero-title">
+                    Harvested at Dawn.<br>
+                    <em>On Your Table by Dusk.</em>
+                </h1>
+
+                <p class="farm-hero-sub">
+                    100% certified organic farm vegetables, orchard fruits, cold-pressed oils, and stone-ground heritage flours directly from our local grower collective.
+                </p>
+
+                <div class="farm-hero-actions">
+                    <a href="{% url 'marketplace' %}" class="btn-harvest-main">
+                        <span>Explore Fresh Produce</span>
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </a>
+                    <a href="{% url 'about' %}" class="btn-harvest-outline">
+                        Our Soil & Farmers
+                    </a>
+                </div>
+
+                <!-- Quick tags -->
+                <div class="hero-tags-strip">
+                    <span class="hero-tags-label">Quick Pick:</span>
+                    <a href="{% url 'marketplace' %}?q=Greens" class="hero-tag-pill">🥬 Crisp Greens</a>
+                    <a href="{% url 'marketplace' %}?q=Tomato" class="hero-tag-pill">🍅 Country Tomatoes</a>
+                    <a href="{% url 'marketplace' %}?q=Oil" class="hero-tag-pill">🫒 Wood-Pressed Oils</a>
+                    <a href="{% url 'marketplace' %}?sort=sale" class="hero-tag-pill">🏷️ Season's Deals</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="farm-hero-deco">HARVEST</div>
+</section>
+
+<!-- ── CATEGORY CIRCLES SHOWCASE ── -->
+<section class="farm-categories-section">
+    <div class="container">
+
+        <div class="section-header-farm reveal">
+            <span class="section-eyebrow-farm">Curated from the Land</span>
+            <h2 class="section-title-farm">Shop by <em>Farm Category</em></h2>
+            <p class="section-sub-farm">Freshly organized aisles of seasonal greens, roots, dairy, and cold-pressed pantry essentials.</p>
+        </div>
+
+        <div class="row g-4 justify-content-center">
+            {% for category in categories %}
+            <div class="col-6 col-md-4 col-lg-2 reveal">
+                <a href="{% url 'marketplace' %}?category={{ category.id }}" class="farm-cat-card">
+                    <div class="farm-cat-circle">
+                        {% if category.image %}
+                        <img src="{{ category.image.url }}" alt="{{ category.name }}">
+                        {% else %}
+                        <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 2.2rem;">🌱</div>
+                        {% endif %}
+                    </div>
+                    <div class="farm-cat-name">{{ category.name }}</div>
+                    <span class="farm-cat-tag">Explore Fresh →</span>
+                </a>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-4" style="color: var(--farm-soil-light);">
+                No farm categories added yet. Check the admin panel to add produce categories.
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+</section>
+
+<!-- ── FEATURED HARVEST PRODUCTS ── -->
+<section class="farm-products-section">
+    <div class="container">
+
+        <div class="section-header-farm reveal">
+            <span class="section-eyebrow-farm">Today's Selection</span>
+            <h2 class="section-title-farm">Fresh <em>Arrivals</em></h2>
+            <p class="section-sub-farm">Hand-picked daily with zero pesticide residues and 100% natural bio-fertilizers.</p>
+        </div>
+
+        <div class="farm-product-grid">
+            {% for product in products %}
+            <div class="farm-pcard reveal">
+                <div class="farm-pcard-media">
+                    {% if product.is_sale %}
+                    <span class="farm-pcard-badge badge-harvest-sale">Season's Special</span>
+                    {% else %}
+                    <span class="farm-pcard-badge badge-organic">100% Organic</span>
+                    {% endif %}
+
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                    {% else %}
+                    <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 3rem;">🌾</div>
+                    {% endif %}
+                </div>
+
+                <div class="farm-pcard-body">
+                    <div class="farm-pcard-cat">{{ product.category.name }}</div>
+                    <a href="{% url 'product_detail' product.id %}" class="farm-pcard-title">{{ product.name }}</a>
+
+                    <div style="margin-bottom: 0.6rem;">
+                        {% stars product.rating %}
+                    </div>
+
+                    <div class="farm-pcard-price-row">
+                        <div>
+                            <span class="farm-price">₹{{ product.price }}</span>
+                            <span class="farm-unit">/ pack</span>
+                        </div>
+                    </div>
+
+                    <button class="btn-add-basket" onclick="addFarmCart({{ product.id }}, this)">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        <span>Add to Basket</span>
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- ── SEASONAL HARVEST BOX BANNER ── -->
+        <div class="farm-box-banner reveal">
+            <div class="row align-items-center">
+                <div class="col-lg-7">
+                    <span class="section-eyebrow-farm" style="margin-bottom: 0.3rem;">Weekly Farm Community</span>
+                    <h3>The Seasonal <em>Harvest Box</em></h3>
+                    <p>
+                        Subscribe to our weekly curated wooden box packed with 8 varieties of organic farm vegetables, 3 seasonal orchard fruits, and fresh morning herbs.
+                    </p>
+                    <a href="{% url 'marketplace' %}" class="btn-harvest-main">
+                        Build Your Weekly Box →
+                    </a>
+                </div>
+                <div class="col-lg-5 text-center mt-4 mt-lg-0">
+                    <div style="font-family: 'Caveat', cursive; font-size: 3rem; color: var(--farm-green); transform: rotate(-4deg);">
+                        Fresh • Organic • Honest
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<script>
+function addFarmCart(productId, btn) {
+    const origText = btn.innerHTML;
+    btn.innerHTML = `<span>Adding...</span>`;
+    btn.disabled = true;
+
+    fetch(`/cart/add/${productId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'X-Requested-With': 'XMLHttpRequest',
+        }
+    })
+    .then(r => r.json())
+    .then(data => {
+        btn.innerHTML = `<span>✓ In Basket</span>`;
+        btn.style.background = 'var(--farm-terracotta)';
+        const badge = document.getElementById('navCartBadge');
+        if (badge) {
+            badge.innerText = data.count;
+            badge.classList.add('visible');
+        }
+        showFarmToast('Added fresh produce to your basket!', '🥬');
+        setTimeout(() => {
+            btn.innerHTML = origText;
+            btn.style.background = 'var(--farm-green)';
+            btn.disabled = false;
+        }, 1800);
+    })
+    .catch(() => {
+        btn.innerHTML = origText;
+        btn.disabled = false;
+    });
+}
+</script>
+{% endblock %}

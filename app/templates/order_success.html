@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+{% block title %}Harvest Order Confirmed — Harvest & Co.{% endblock %}
+
+{% block content %}
+<style>
+    .success-page {
+        min-height: calc(100vh - 120px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4rem 1rem;
+    }
+
+    .success-box {
+        max-width: 540px;
+        width: 100%;
+        text-align: center;
+    }
+
+    .success-sprout {
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        background: var(--farm-green);
+        color: #FAF7EE;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        box-shadow: 0 8px 24px rgba(38, 70, 52, 0.25);
+        font-size: 2rem;
+    }
+
+    .success-title {
+        font-family: 'Fraunces', serif;
+        font-size: 2.5rem;
+        font-weight: 600;
+        color: var(--farm-green);
+        margin-bottom: 0.5rem;
+    }
+
+    .success-title em {
+        font-family: 'Cormorant Garamond', serif;
+        font-style: italic;
+        font-weight: 400;
+        color: var(--farm-terracotta);
+    }
+
+    .success-sub {
+        font-size: 0.9rem;
+        color: var(--farm-soil-mid);
+        line-height: 1.7;
+        margin-bottom: 2rem;
+    }
+
+    /* Receipt card */
+    .success-receipt {
+        background: #F6F1E8;
+        border: 1px solid rgba(38, 70, 52, 0.12);
+        border-radius: 16px;
+        padding: 1.75rem;
+        text-align: left;
+        margin-bottom: 2rem;
+    }
+
+    .receipt-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        font-size: 0.85rem;
+        color: var(--farm-soil-mid);
+        border-bottom: 1px dashed rgba(38, 70, 52, 0.1);
+    }
+
+    .receipt-row:last-child {
+        border-bottom: none;
+    }
+
+    .receipt-lbl {
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--farm-soil-light);
+    }
+
+    .receipt-val {
+        font-weight: 500;
+        color: var(--farm-soil);
+    }
+
+    .receipt-val.highlight {
+        font-family: 'Fraunces', serif;
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--farm-green);
+    }
+
+    .success-btns {
+        display: flex;
+        gap: 0.75rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+</style>
+
+<div class="success-page">
+    <div class="success-box">
+
+        <div class="success-sprout">🌱</div>
+
+        <div class="mp-eyebrow" style="margin-bottom: 0.3rem;">Order #{{ order.id }} Confirmed</div>
+        <h1 class="success-title">Thank you,<br><em>{{ user.first_name|default:user.username }}!</em></h1>
+
+        <p class="success-sub">
+            Your fresh harvest order has been received by our farmers.<br>
+            {% if order.payment_method == 'cod' %}
+            Please keep ₹{{ order.grand_total }} ready upon doorstep delivery.
+            {% else %}
+            Payment of ₹{{ order.grand_total }} confirmed via {{ order.get_payment_method_display }}.
+            {% endif %}
+        </p>
+
+        <div class="success-receipt">
+            <div class="receipt-row">
+                <span class="receipt-lbl">Order Reference</span>
+                <span class="receipt-val highlight">#{{ order.id }}</span>
+            </div>
+            <div class="receipt-row">
+                <span class="receipt-lbl">Farm Status</span>
+                <span class="receipt-val">
+                    <span style="background: var(--farm-green); color: #FAF7EE; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.68rem; font-weight: 600; text-transform: uppercase;">
+                        {{ order.get_status_display }}
+                    </span>
+                </span>
+            </div>
+            <div class="receipt-row">
+                <span class="receipt-lbl">Payment Mode</span>
+                <span class="receipt-val">{{ order.get_payment_method_display }}</span>
+            </div>
+            <div class="receipt-row">
+                <span class="receipt-lbl">Total Amount</span>
+                <span class="receipt-val highlight">₹{{ order.grand_total }}</span>
+            </div>
+            <div class="receipt-row">
+                <span class="receipt-lbl">Delivery Destination</span>
+                <span class="receipt-val">{{ order.city }}, {{ order.state }} — {{ order.pincode }}</span>
+            </div>
+            {% if order.estimated_delivery %}
+            <div class="receipt-row">
+                <span class="receipt-lbl">Est. Fresh Delivery</span>
+                <span class="receipt-val">{{ order.estimated_delivery|date:"d M Y" }}</span>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="success-btns">
+            <a href="{% url 'order_detail' order.id %}" class="btn-harvest-main">
+                Track Fresh Delivery →
+            </a>
+            <a href="{% url 'order_pdf' order.id %}" class="btn-harvest-outline" style="color: var(--farm-green); border-color: rgba(38,70,52,0.3);">
+                ↓ Download Invoice PDF
+            </a>
+            <a href="{% url 'marketplace' %}" class="btn-harvest-outline" style="color: var(--farm-green); border-color: rgba(38,70,52,0.3);">
+                Back to Market
+            </a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

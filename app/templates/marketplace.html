@@ -1,0 +1,653 @@
+{% extends 'base.html' %}
+{% load star_tags %}
+{% block title %}The Farm Marketplace — Harvest & Co.{% endblock %}
+
+{% block content %}
+<style>
+    /* ══════════════════════════════════════════
+       MARKETPLACE HERO & SEARCH
+    ══════════════════════════════════════════ */
+    .mp-hero-farm {
+        background: var(--farm-green-dark);
+        padding: 3.5rem 0 3rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .mp-hero-farm::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+            radial-gradient(ellipse at 10% 50%, rgba(58, 107, 75, 0.5) 0%, transparent 60%),
+            radial-gradient(ellipse at 90% 20%, rgba(200, 90, 50, 0.2) 0%, transparent 50%);
+        pointer-events: none;
+    }
+
+    .mp-hero-farm .container {
+        position: relative;
+        z-index: 1;
+    }
+
+    .mp-eyebrow {
+        font-family: 'Jost', sans-serif;
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: var(--farm-gold);
+        margin-bottom: 0.5rem;
+    }
+
+    .mp-hero-title {
+        font-family: 'Fraunces', serif;
+        font-size: clamp(2.4rem, 5vw, 3.8rem);
+        font-weight: 600;
+        color: var(--farm-cream);
+        line-height: 1.1;
+        margin-bottom: 0.4rem;
+    }
+
+    .mp-hero-title em {
+        font-family: 'Cormorant Garamond', serif;
+        font-style: italic;
+        font-weight: 400;
+        color: rgba(250, 247, 238, 0.7);
+    }
+
+    .mp-hero-desc {
+        font-size: 0.88rem;
+        color: rgba(250, 247, 238, 0.7);
+        max-width: 500px;
+        margin-bottom: 2rem;
+        font-weight: 300;
+    }
+
+    /* Search bar */
+    .farm-search-wrap {
+        position: relative;
+        max-width: 540px;
+    }
+
+    .farm-search-input {
+        width: 100%;
+        background: rgba(250, 247, 238, 0.1);
+        border: 1.5px solid rgba(250, 247, 238, 0.25);
+        border-radius: 999px;
+        padding: 0.85rem 3.2rem 0.85rem 1.4rem;
+        font-family: 'Jost', sans-serif;
+        font-size: 0.88rem;
+        font-weight: 300;
+        color: #FAF7EE;
+        outline: none;
+        letter-spacing: 0.02em;
+        transition: all 0.3s ease;
+    }
+
+    .farm-search-input::placeholder {
+        color: rgba(250, 247, 238, 0.5);
+    }
+
+    .farm-search-input:focus {
+        border-color: var(--farm-gold);
+        background: rgba(250, 247, 238, 0.16);
+        box-shadow: 0 0 0 4px rgba(212, 155, 75, 0.2);
+    }
+
+    .farm-search-btn {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: var(--farm-terracotta);
+        border: none;
+        color: #FAF7EE;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .farm-search-btn:hover {
+        background: var(--farm-terracotta-dark);
+        transform: translateY(-50%) scale(1.05);
+    }
+
+    /* ══════════════════════════════════════════
+       MAIN MARKETPLACE LAYOUT
+    ══════════════════════════════════════════ */
+    .farm-mp-body {
+        padding: 3.5rem 0 6rem;
+    }
+
+    /* Quick category filter pills */
+    .farm-quick-cats {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.65rem;
+        margin-bottom: 2.5rem;
+        align-items: center;
+    }
+
+    .farm-cat-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.45rem 1.1rem;
+        background: var(--farm-kraft);
+        border: 1px solid rgba(38, 70, 52, 0.12);
+        border-radius: 999px;
+        font-size: 0.76rem;
+        font-weight: 500;
+        color: var(--farm-soil-mid);
+        text-decoration: none;
+        transition: all 0.25s ease;
+    }
+
+    .farm-cat-pill:hover {
+        background: rgba(38, 70, 52, 0.1);
+        color: var(--farm-green);
+        border-color: var(--farm-green);
+    }
+
+    .farm-cat-pill.active {
+        background: var(--farm-green);
+        color: #FAF7EE;
+        border-color: var(--farm-green);
+        box-shadow: 0 4px 14px rgba(38, 70, 52, 0.2);
+    }
+
+    /* Subcategories Bar */
+    .farm-subcat-strip {
+        background: rgba(38, 70, 52, 0.04);
+        border: 1px dashed rgba(38, 70, 52, 0.15);
+        border-radius: 12px;
+        padding: 0.75rem 1.25rem;
+        margin-bottom: 2.5rem;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .subcat-label {
+        font-family: 'Caveat', cursive;
+        font-size: 1.1rem;
+        color: var(--farm-green);
+        margin-right: 0.5rem;
+    }
+
+    .subcat-link {
+        font-size: 0.74rem;
+        font-weight: 500;
+        color: var(--farm-soil-mid);
+        padding: 0.25rem 0.75rem;
+        border-radius: 6px;
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+
+    .subcat-link:hover,
+    .subcat-link.active {
+        background: var(--farm-green);
+        color: #FAF7EE;
+    }
+
+    /* Top filter & sorting bar */
+    .farm-mp-toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid rgba(38, 70, 52, 0.12);
+    }
+
+    .farm-count-badge {
+        font-family: 'Fraunces', serif;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--farm-green);
+    }
+
+    .farm-count-badge em {
+        font-style: italic;
+        font-weight: 400;
+        color: var(--farm-soil-light);
+        font-size: 0.9rem;
+    }
+
+    .farm-sort-select {
+        background: var(--farm-cream);
+        border: 1.5px solid rgba(38, 70, 52, 0.2);
+        border-radius: 8px;
+        padding: 0.45rem 1.8rem 0.45rem 0.85rem;
+        font-family: 'Jost', sans-serif;
+        font-size: 0.78rem;
+        color: var(--farm-soil);
+        outline: none;
+        cursor: pointer;
+    }
+
+    /* ══════════════════════════════════════════
+       PRODUCT HARVEST GRID & KRAFT CARDS
+    ══════════════════════════════════════════ */
+    .farm-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 2rem;
+    }
+
+    .mp-farm-card {
+        background: #F6F1E8;
+        border: 1px solid rgba(38, 70, 52, 0.12);
+        border-radius: 16px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        transition: all 0.4s cubic-bezier(0.2, 0.8, 0.4, 1);
+    }
+
+    .mp-farm-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 16px 40px rgba(38, 70, 52, 0.12);
+        border-color: rgba(38, 70, 52, 0.25);
+    }
+
+    .mp-card-img-box {
+        position: relative;
+        aspect-ratio: 1;
+        overflow: hidden;
+        background: #EFE8DA;
+    }
+
+    .mp-card-img-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.4, 1);
+    }
+
+    .mp-farm-card:hover .mp-card-img-box img {
+        transform: scale(1.08);
+    }
+
+    .mp-badge-harvest {
+        position: absolute;
+        top: 0.85rem;
+        left: 0.85rem;
+        padding: 0.25rem 0.65rem;
+        border-radius: 6px;
+        font-size: 0.62rem;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        z-index: 2;
+    }
+
+    .badge-sale {
+        background: var(--farm-terracotta);
+        color: #FAF7EE;
+    }
+
+    .badge-organic {
+        background: var(--farm-green);
+        color: #FAF7EE;
+    }
+
+    .mp-wish-btn {
+        position: absolute;
+        top: 0.85rem;
+        right: 0.85rem;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: rgba(250, 247, 238, 0.92);
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 2;
+        transition: all 0.2s ease;
+        color: var(--farm-soil-light);
+        backdrop-filter: blur(4px);
+    }
+
+    .mp-wish-btn:hover,
+    .mp-wish-btn.wishlisted {
+        background: #FAF7EE;
+        color: var(--farm-terracotta);
+        transform: scale(1.12);
+    }
+
+    .mp-wish-btn.wishlisted svg {
+        fill: var(--farm-terracotta);
+    }
+
+    .mp-card-details {
+        padding: 1.25rem 1.25rem 1.4rem;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+    }
+
+    .mp-card-tags {
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--farm-soil-light);
+        margin-bottom: 0.35rem;
+    }
+
+    .mp-card-title {
+        font-family: 'Fraunces', serif;
+        font-size: 1.22rem;
+        font-weight: 600;
+        color: var(--farm-green);
+        text-decoration: none;
+        line-height: 1.25;
+        margin-bottom: 0.4rem;
+    }
+
+    .mp-card-title:hover {
+        color: var(--farm-terracotta);
+    }
+
+    .mp-card-footer {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        margin-top: auto;
+        padding-top: 0.85rem;
+        margin-bottom: 1.1rem;
+        border-top: 1px dashed rgba(38, 70, 52, 0.12);
+    }
+
+    .mp-price-tag {
+        font-family: 'Fraunces', serif;
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: var(--farm-soil);
+    }
+
+    .mp-btn-add {
+        width: 100%;
+        background: var(--farm-green);
+        color: #FAF7EE;
+        border: none;
+        border-radius: 999px;
+        padding: 0.75rem 1rem;
+        font-family: 'Jost', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        transition: all 0.25s ease;
+    }
+
+    .mp-btn-add:hover {
+        background: var(--farm-green-dark);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 14px rgba(38, 70, 52, 0.25);
+    }
+
+    .mp-btn-add.in-cart {
+        background: var(--farm-green-light);
+    }
+
+    /* Empty state */
+    .farm-empty-state {
+        text-align: center;
+        padding: 5rem 2rem;
+        background: rgba(38, 70, 52, 0.03);
+        border: 2px dashed rgba(38, 70, 52, 0.15);
+        border-radius: 20px;
+        grid-column: 1 / -1;
+    }
+
+    .farm-empty-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+</style>
+
+<!-- ── MARKETPLACE HERO ── -->
+<div class="mp-hero-farm">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-7">
+                <div class="mp-eyebrow">Fresh Farm Harvest</div>
+                <h1 class="mp-hero-title">
+                    Daily <em>Organic</em> Market
+                </h1>
+                <p class="mp-hero-desc">
+                    Explore today's harvest of freshly harvested organic vegetables, heirloom fruits, country cold-pressed oils, and traditional grains.
+                </p>
+
+                <!-- Search form -->
+                <form method="GET" action="{% url 'marketplace' %}" class="farm-search-wrap">
+                    {% if selected_cat %}
+                    <input type="hidden" name="category" value="{{ selected_cat }}">
+                    {% endif %}
+                    {% if selected_sub %}
+                    <input type="hidden" name="sub" value="{{ selected_sub }}">
+                    {% endif %}
+                    <input
+                        type="text"
+                        name="q"
+                        class="farm-search-input"
+                        placeholder="Search country tomatoes, crisp spinach, ghee, oils..."
+                        value="{{ search_query }}"
+                    >
+                    <button type="submit" class="farm-search-btn" title="Search produce">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── MAIN MARKET BODY ── -->
+<div class="farm-mp-body">
+    <div class="container">
+
+        <!-- Quick category filter pills -->
+        <div class="farm-quick-cats">
+            <a href="{% url 'marketplace' %}{% if search_query %}?q={{ search_query }}{% endif %}" class="farm-cat-pill {% if not selected_cat %}active{% endif %}">
+                🌿 All Harvest
+            </a>
+            {% for cat in categories %}
+            <a href="{% url 'marketplace' %}?category={{ cat.id }}{% if search_query %}&q={{ search_query }}{% endif %}"
+               class="farm-cat-pill {% if selected_cat == cat.id|stringformat:'s' %}active{% endif %}">
+                {{ cat.name }}
+            </a>
+            {% endfor %}
+        </div>
+
+        <!-- Subcategories Bar (if category selected) -->
+        {% if subcategories %}
+        <div class="farm-subcat-strip">
+            <span class="subcat-label">Aisles:</span>
+            <a href="{% url 'marketplace' %}?category={{ selected_cat }}{% if search_query %}&q={{ search_query }}{% endif %}"
+               class="subcat-link {% if not selected_sub %}active{% endif %}">
+                All {{ active_category.name }}
+            </a>
+            {% for sub in subcategories %}
+            <a href="{% url 'marketplace' %}?category={{ selected_cat }}&sub={{ sub.id }}{% if search_query %}&q={{ search_query }}{% endif %}"
+               class="subcat-link {% if selected_sub == sub.id|stringformat:'s' %}active{% endif %}">
+                {{ sub.name }}
+            </a>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Toolbar: Item count & Sort Dropdown -->
+        <div class="farm-mp-toolbar">
+            <div class="farm-count-badge">
+                {{ total }} <em>produce item{{ total|pluralize }} harvested</em>
+            </div>
+
+            <form method="GET" id="sortForm">
+                {% if selected_cat %}<input type="hidden" name="category" value="{{ selected_cat }}">{% endif %}
+                {% if selected_sub %}<input type="hidden" name="sub" value="{{ selected_sub }}">{% endif %}
+                {% if search_query %}<input type="hidden" name="q" value="{{ search_query }}">{% endif %}
+                <select name="sort" class="farm-sort-select" onchange="document.getElementById('sortForm').submit()">
+                    {% for val, label in sort_list %}
+                    <option value="{{ val }}" {% if sort_by == val %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+
+        <!-- Product Grid -->
+        <div class="farm-grid">
+            {% for product in products %}
+            <div class="mp-farm-card reveal">
+
+                <!-- Image media box -->
+                <div class="mp-card-img-box">
+                    {% if product.is_sale %}
+                    <span class="mp-badge-harvest badge-sale">Harvest Deal</span>
+                    {% else %}
+                    <span class="mp-badge-harvest badge-organic">100% Organic</span>
+                    {% endif %}
+
+                    <!-- Wishlist toggle button -->
+                    <button class="mp-wish-btn {% if product.id in wishlist_ids %}wishlisted{% endif %}"
+                            onclick="toggleFarmWishlist({{ product.id }}, this)"
+                            title="Save to farm wishlist">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        </svg>
+                    </button>
+
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                    {% else %}
+                    <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 3.5rem;">🌱</div>
+                    {% endif %}
+                </div>
+
+                <!-- Product Details -->
+                <div class="mp-card-details">
+                    <div class="mp-card-tags">
+                        {{ product.category.name }}{% if product.subcategory %} › {{ product.subcategory.name }}{% endif %}
+                    </div>
+
+                    <a href="{% url 'product_detail' product.id %}" class="mp-card-title">
+                        {{ product.name }}
+                    </a>
+
+                    <div style="margin-bottom: 0.4rem;">
+                        {% stars product.rating %}
+                    </div>
+
+                    <div class="mp-card-footer">
+                        <div>
+                            <span class="mp-price-tag">₹{{ product.price }}</span>
+                            <span style="font-size: 0.72rem; color: var(--farm-soil-light);">/ pack</span>
+                        </div>
+                    </div>
+
+                    <button class="mp-btn-add {% if product.id in cart_ids %}in-cart{% endif %}"
+                            onclick="addFarmCartMP({{ product.id }}, this)">
+                        {% if product.id in cart_ids %}
+                        <span>✓ In Basket</span>
+                        {% else %}
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        <span>Add to Basket</span>
+                        {% endif %}
+                    </button>
+                </div>
+
+            </div>
+            {% empty %}
+            <div class="farm-empty-state">
+                <div class="farm-empty-icon">🌾</div>
+                <h3 style="font-family: 'Fraunces', serif; color: var(--farm-green);">No Harvest Found</h3>
+                <p style="color: var(--farm-soil-light); font-size: 0.9rem;">We couldn't find any produce matching your search or filters.</p>
+                <a href="{% url 'marketplace' %}" class="btn-harvest-main" style="display: inline-flex; margin-top: 1rem;">
+                    Clear Filters & Show All
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+</div>
+
+<script>
+function addFarmCartMP(productId, btn) {
+    const origText = btn.innerHTML;
+    btn.innerHTML = `<span>Adding...</span>`;
+
+    fetch(`/cart/add/${productId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'X-Requested-With': 'XMLHttpRequest',
+        }
+    })
+    .then(r => r.json())
+    .then(data => {
+        btn.innerHTML = `<span>✓ In Basket</span>`;
+        btn.classList.add('in-cart');
+        const badge = document.getElementById('navCartBadge');
+        if (badge) {
+            badge.innerText = data.count;
+            badge.classList.add('visible');
+        }
+        showFarmToast('Added to your fresh basket!', '🥬');
+    })
+    .catch(() => {
+        btn.innerHTML = origText;
+    });
+}
+
+function toggleFarmWishlist(productId, btn) {
+    fetch(`/wishlist/toggle/${productId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'X-Requested-With': 'XMLHttpRequest',
+        }
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.wishlisted) {
+            btn.classList.add('wishlisted');
+            showFarmToast('Saved to your farm wishlist!', '❤️');
+        } else {
+            btn.classList.remove('wishlisted');
+            showFarmToast('Removed from farm wishlist', '🤍');
+        }
+        const badge = document.getElementById('navWishlistBadge');
+        if (badge) {
+            badge.innerText = data.count;
+            badge.classList.toggle('visible', data.count > 0);
+        }
+    });
+}
+</script>
+{% endblock %}

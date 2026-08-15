@@ -1,0 +1,257 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Order #{{ order.id }} Tracking — Harvest & Co.{% endblock %}
+
+{% block content %}
+<style>
+    .od-hero-farm {
+        background: var(--farm-green-dark);
+        padding: 3rem 0 2.5rem;
+        color: #FAF7EE;
+        position: relative;
+    }
+
+    .od-body-farm {
+        padding: 3rem 0 6rem;
+    }
+
+    .od-layout-farm {
+        display: grid;
+        grid-template-columns: 1fr 340px;
+        gap: 2.5rem;
+        align-items: start;
+    }
+
+    /* Stepper Card */
+    .farm-tracker-card {
+        background: #F6F1E8;
+        border: 1px solid rgba(38, 70, 52, 0.12);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .tracker-title {
+        font-family: 'Fraunces', serif;
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: var(--farm-green);
+        margin-bottom: 2rem;
+    }
+
+    .farm-stepper {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 0.5rem;
+        position: relative;
+        text-align: center;
+    }
+
+    .step-node {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+    }
+
+    .step-circle {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: var(--farm-cream);
+        border: 2px solid rgba(38, 70, 52, 0.2);
+        color: var(--farm-soil-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 0.65rem;
+        z-index: 2;
+        transition: all 0.3s;
+    }
+
+    .step-node.completed .step-circle {
+        background: var(--farm-green);
+        border-color: var(--farm-green);
+        color: #FAF7EE;
+    }
+
+    .step-node.active .step-circle {
+        background: var(--farm-terracotta);
+        border-color: var(--farm-terracotta);
+        color: #FAF7EE;
+        box-shadow: 0 0 0 4px rgba(200, 90, 50, 0.2);
+    }
+
+    .step-label {
+        font-size: 0.72rem;
+        font-weight: 500;
+        color: var(--farm-soil-mid);
+        line-height: 1.3;
+    }
+
+    .step-node.active .step-label {
+        font-weight: 700;
+        color: var(--farm-green);
+    }
+
+    /* Items Card */
+    .farm-items-card {
+        background: #F6F1E8;
+        border: 1px solid rgba(38, 70, 52, 0.12);
+        border-radius: 16px;
+        padding: 2rem;
+    }
+
+    .od-item-row {
+        display: flex;
+        align-items: center;
+        gap: 1.25rem;
+        padding: 1rem 0;
+        border-bottom: 1px dashed rgba(38, 70, 52, 0.1);
+    }
+
+    .od-item-row:last-child {
+        border-bottom: none;
+    }
+
+    .od-item-img {
+        width: 60px;
+        height: 60px;
+        border-radius: 10px;
+        overflow: hidden;
+        background: #EFE8DA;
+        object-fit: cover;
+    }
+
+    .od-item-name {
+        font-family: 'Fraunces', serif;
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: var(--farm-green);
+    }
+
+    /* Sidebar info */
+    .od-sidebar-card {
+        background: #F3ECE0;
+        border: 1px solid rgba(38, 70, 52, 0.15);
+        border-radius: 16px;
+        padding: 2rem;
+    }
+
+    @media (max-width: 991px) {
+        .od-layout-farm {
+            grid-template-columns: 1fr;
+        }
+        .farm-stepper {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            text-align: left;
+        }
+        .step-node {
+            flex-direction: row;
+            gap: 1rem;
+        }
+    }
+</style>
+
+<!-- ── HEADER HERO ── -->
+<div class="od-hero-farm">
+    <div class="container">
+        <div class="mp-eyebrow" style="color: var(--farm-gold);">Harvest Delivery</div>
+        <h1 style="font-family: 'Fraunces', serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 600; margin-bottom: 0.35rem;">
+            Order <em>#{{ order.id }}</em>
+        </h1>
+        <p style="font-size: 0.85rem; color: rgba(250, 247, 238, 0.7); margin-bottom: 0;">
+            Placed on {{ order.created_at|date:"d M Y, h:i A" }} • {{ order.get_payment_method_display }}
+        </p>
+    </div>
+</div>
+
+<div class="od-body-farm">
+    <div class="container">
+        <div class="od-layout-farm">
+
+            <!-- Main: Tracking & Items -->
+            <div>
+                <!-- Stepper -->
+                <div class="farm-tracker-card">
+                    <div class="tracker-title">Fresh Delivery Status</div>
+
+                    <div class="farm-stepper">
+                        {% for step in steps %}
+                        <div class="step-node {% if step.completed %}completed{% elif step.active %}active{% endif %}">
+                            <div class="step-circle">
+                                {% if step.completed %}✓{% else %}{{ forloop.counter }}{% endif %}
+                            </div>
+                            <div class="step-label">{{ step.label }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Items Ordered -->
+                <div class="farm-items-card">
+                    <h3 style="font-family: 'Fraunces', serif; font-size: 1.25rem; color: var(--farm-green); margin-bottom: 1.25rem;">
+                        Produce in this Harvest ({{ order.items.count }})
+                    </h3>
+
+                    {% for item in order.items.all %}
+                    <div class="od-item-row">
+                        {% if item.product and item.product.image %}
+                        <img class="od-item-img" src="{{ item.product.image.url }}" alt="{{ item.name }}">
+                        {% else %}
+                        <div style="width: 60px; height: 60px; border-radius: 10px; background: #EFE8DA; display: flex; align-items: center; justify-content: center; font-size: 1.8rem;">🌱</div>
+                        {% endif %}
+
+                        <div style="flex: 1;">
+                            <div class="od-item-name">{{ item.name }}</div>
+                            <div style="font-size: 0.78rem; color: var(--farm-soil-light);">
+                                ₹{{ item.price }} × {{ item.quantity }}
+                            </div>
+                        </div>
+
+                        <div style="font-family: 'Fraunces', serif; font-size: 1.1rem; font-weight: 700; color: var(--farm-soil);">
+                            ₹{{ item.get_subtotal }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Sidebar: Address & Totals -->
+            <div class="od-sidebar-card">
+                <h4 style="font-family: 'Fraunces', serif; font-size: 1.2rem; color: var(--farm-green); margin-bottom: 1.25rem;">
+                    Delivery Snapshot
+                </h4>
+
+                <div style="font-size: 0.88rem; color: var(--farm-soil-mid); line-height: 1.7; margin-bottom: 1.5rem; padding-bottom: 1.25rem; border-bottom: 1px dashed rgba(38,70,52,0.15);">
+                    <strong>{{ order.full_name }}</strong><br>
+                    {{ order.address }}<br>
+                    {{ order.city }}, {{ order.state }} — {{ order.pincode }}<br>
+                    📞 {{ order.phone }}
+                </div>
+
+                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--farm-soil-mid); margin-bottom: 0.5rem;">
+                    <span>Produce Total</span>
+                    <span>₹{{ order.total }}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--farm-soil-mid); margin-bottom: 1rem;">
+                    <span>Refrigerated Delivery</span>
+                    <span>₹{{ order.delivery_charge }}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-family: 'Fraunces', serif; font-size: 1.35rem; font-weight: 700; color: var(--farm-green); border-top: 2px dashed rgba(38,70,52,0.18); padding-top: 0.85rem; margin-bottom: 1.75rem;">
+                    <span>Grand Total</span>
+                    <span>₹{{ order.grand_total }}</span>
+                </div>
+
+                <a href="{% url 'order_pdf' order.id %}" class="btn-checkout-farm" style="margin-top: 0; background: var(--farm-green);">
+                    <span>↓ Download Invoice PDF</span>
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

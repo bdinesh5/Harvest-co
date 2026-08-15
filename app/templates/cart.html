@@ -1,0 +1,360 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}My Harvest Basket — Harvest & Co.{% endblock %}
+
+{% block content %}
+<style>
+    .cart-page-wrap {
+        padding: 4rem 0 6rem;
+    }
+
+    .cart-header-title {
+        font-family: 'Fraunces', serif;
+        font-size: clamp(2rem, 4vw, 2.8rem);
+        font-weight: 600;
+        color: var(--farm-green);
+        margin-bottom: 0.35rem;
+    }
+
+    .cart-header-sub {
+        font-size: 0.88rem;
+        color: var(--farm-soil-light);
+        margin-bottom: 2.5rem;
+    }
+
+    .cart-grid-layout {
+        display: grid;
+        grid-template-columns: 1fr 360px;
+        gap: 3rem;
+        align-items: start;
+    }
+
+    /* Produce Table / Item List */
+    .cart-items-card {
+        background: #F6F1E8;
+        border: 1px solid rgba(38, 70, 52, 0.12);
+        border-radius: 16px;
+        padding: 1.5rem 2rem;
+    }
+
+    .cart-item-row {
+        display: grid;
+        grid-template-columns: 80px 1fr auto auto;
+        gap: 1.5rem;
+        align-items: center;
+        padding: 1.25rem 0;
+        border-bottom: 1px dashed rgba(38, 70, 52, 0.12);
+    }
+
+    .cart-item-row:last-child {
+        border-bottom: none;
+    }
+
+    .cart-item-img {
+        width: 80px;
+        height: 80px;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #EFE8DA;
+    }
+
+    .cart-item-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .cart-item-info h4 {
+        font-family: 'Fraunces', serif;
+        font-size: 1.15rem;
+        font-weight: 600;
+        color: var(--farm-green);
+        margin-bottom: 0.2rem;
+    }
+
+    .cart-item-cat {
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--farm-soil-light);
+        margin-bottom: 0.2rem;
+    }
+
+    .cart-item-unit-price {
+        font-size: 0.8rem;
+        color: var(--farm-soil-mid);
+    }
+
+    /* Qty Selector */
+    .cart-qty-ctrl {
+        display: inline-flex;
+        align-items: center;
+        background: var(--farm-cream);
+        border: 1.5px solid rgba(38, 70, 52, 0.2);
+        border-radius: 999px;
+        padding: 0.2rem 0.5rem;
+        gap: 0.75rem;
+    }
+
+    .cart-qty-btn {
+        background: none;
+        border: none;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--farm-green);
+        transition: all 0.2s;
+    }
+
+    .cart-qty-btn:hover {
+        background: var(--farm-green);
+        color: #FAF7EE;
+    }
+
+    .cart-qty-num {
+        font-family: 'Fraunces', serif;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--farm-soil);
+        min-width: 18px;
+        text-align: center;
+    }
+
+    .cart-item-subtotal {
+        font-family: 'Fraunces', serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--farm-soil);
+        min-width: 80px;
+        text-align: right;
+    }
+
+    /* Summary Receipt Box */
+    .cart-summary-box {
+        background: #F3ECE0;
+        border: 1px solid rgba(38, 70, 52, 0.15);
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 12px 36px rgba(38, 70, 52, 0.06);
+    }
+
+    .cart-summary-title {
+        font-family: 'Fraunces', serif;
+        font-size: 1.35rem;
+        font-weight: 600;
+        color: var(--farm-green);
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid rgba(38, 70, 52, 0.12);
+    }
+
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.88rem;
+        color: var(--farm-soil-mid);
+        margin-bottom: 0.85rem;
+    }
+
+    .summary-grand-total {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-top: 1.25rem;
+        padding-top: 1.25rem;
+        border-top: 2px dashed rgba(38, 70, 52, 0.18);
+        font-family: 'Fraunces', serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--farm-green);
+    }
+
+    .btn-checkout-farm {
+        width: 100%;
+        background: var(--farm-terracotta);
+        color: #FAF7EE;
+        border: none;
+        border-radius: 999px;
+        padding: 1rem;
+        font-family: 'Jost', sans-serif;
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.65rem;
+        margin-top: 1.5rem;
+        box-shadow: 0 8px 24px rgba(200, 90, 50, 0.3);
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .btn-checkout-farm:hover {
+        background: var(--farm-terracotta-dark);
+        color: #FAF7EE;
+        transform: translateY(-2px);
+        box-shadow: 0 12px 30px rgba(200, 90, 50, 0.4);
+    }
+
+    .eco-delivery-tip {
+        margin-top: 1.25rem;
+        font-size: 0.76rem;
+        color: var(--farm-soil-light);
+        text-align: center;
+        line-height: 1.5;
+    }
+
+    @media (max-width: 991px) {
+        .cart-grid-layout {
+            grid-template-columns: 1fr;
+        }
+        .cart-item-row {
+            grid-template-columns: 70px 1fr;
+            gap: 1rem;
+        }
+    }
+</style>
+
+<div class="cart-page-wrap">
+    <div class="container">
+
+        <h1 class="cart-header-title">My Harvest <em>Basket</em></h1>
+        <p class="cart-header-sub">Review your fresh farm produce, grains, and pantry selections before doorstep delivery.</p>
+
+        {% if items %}
+        <div class="cart-grid-layout">
+
+            <!-- Item List -->
+            <div class="cart-items-card">
+                {% for item in items %}
+                <div class="cart-item-row" id="cartRow-{{ item.id }}">
+                    <div class="cart-item-img">
+                        {% if item.product.image %}
+                        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                        {% else %}
+                        <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 2rem;">🌱</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="cart-item-info">
+                        <div class="cart-item-cat">{{ item.product.category.name }}</div>
+                        <h4>{{ item.product.name }}</h4>
+                        <div class="cart-item-unit-price">₹{{ item.product.price }} / pack</div>
+                    </div>
+
+                    <div class="cart-qty-ctrl">
+                        <button class="cart-qty-btn" onclick="updateFarmCart({{ item.id }}, 'decrease')">−</button>
+                        <span class="cart-qty-num" id="qty-{{ item.id }}">{{ item.quantity }}</span>
+                        <button class="cart-qty-btn" onclick="updateFarmCart({{ item.id }}, 'increase')">+</button>
+                    </div>
+
+                    <div class="cart-item-subtotal" id="subtotal-{{ item.id }}">
+                        ₹{{ item.get_subtotal }}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Summary Receipt -->
+            <div class="cart-summary-box">
+                <div class="cart-summary-title">Harvest Bill</div>
+
+                <div class="summary-row">
+                    <span>Produce Subtotal</span>
+                    <span id="cartSubtotal">₹{{ total }}</span>
+                </div>
+
+                <div class="summary-row">
+                    <span>Eco Cold Delivery</span>
+                    <span>₹{{ delivery }}</span>
+                </div>
+
+                <div class="summary-grand-total">
+                    <span>Grand Total</span>
+                    <span id="cartGrandTotal">₹{{ grand_total }}</span>
+                </div>
+
+                <a href="{% url 'checkout' %}" class="btn-checkout-farm">
+                    <span>Proceed to Delivery</span>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </a>
+
+                <div class="eco-delivery-tip">
+                    🌱 Packed in 100% biodegradable unbleached kraft paper with reusable cotton produce twine.
+                </div>
+            </div>
+
+        </div>
+        {% else %}
+        <!-- Empty Basket -->
+        <div style="text-align: center; padding: 5rem 2rem; background: #F6F1E8; border: 2px dashed rgba(38,70,52,0.15); border-radius: 20px;">
+            <div style="font-size: 3.5rem; margin-bottom: 1rem;">🧺</div>
+            <h2 style="font-family: 'Fraunces', serif; color: var(--farm-green);">Your Basket is Empty</h2>
+            <p style="color: var(--farm-soil-light); font-size: 0.95rem; margin-bottom: 2rem;">You haven't added any fresh harvest items to your basket yet.</p>
+            <a href="{% url 'marketplace' %}" class="btn-harvest-main" style="display: inline-flex;">
+                Explore Today's Market →
+            </a>
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+
+<script>
+function updateFarmCart(itemId, action) {
+    fetch(`/cart/update/${itemId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'X-Requested-With': 'XMLHttpRequest',
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `action=${action}`
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.removed) {
+            const row = document.getElementById(`cartRow-${itemId}`);
+            if (row) row.remove();
+        } else {
+            const qtyEl = document.getElementById(`qty-${itemId}`);
+            const subEl = document.getElementById(`subtotal-${itemId}`);
+            if (qtyEl) qtyEl.innerText = data.quantity;
+            if (subEl) subEl.innerText = `₹${data.subtotal}`;
+        }
+
+        const subtotalEl = document.getElementById('cartSubtotal');
+        const grandEl = document.getElementById('cartGrandTotal');
+        const badge = document.getElementById('navCartBadge');
+
+        if (subtotalEl) subtotalEl.innerText = `₹${data.cart_total}`;
+        if (grandEl) {
+            const num = parseFloat(data.cart_total);
+            const delivery = num > 0 ? 49 : 0;
+            grandEl.innerText = `₹${(num + delivery).toFixed(2)}`;
+        }
+        if (badge) {
+            badge.innerText = data.count;
+            badge.classList.toggle('visible', data.count > 0);
+        }
+
+        if (data.count === 0) {
+            window.location.reload();
+        }
+    });
+}
+</script>
+{% endblock %}

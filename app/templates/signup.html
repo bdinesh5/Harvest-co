@@ -1,0 +1,535 @@
+{% extends 'base.html' %}
+{% block title %}Join the Collective — Harvest & Co.{% endblock %}
+
+{% block content %}
+<style>
+    .auth-page {
+        min-height: calc(100vh - 120px);
+        display: flex;
+        align-items: stretch;
+    }
+
+    /* ── LEFT DECORATIVE PANEL ── */
+    .auth-deco-panel {
+        flex: 0 0 42%;
+        background: var(--farm-green-dark);
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 4rem 3.5rem;
+        color: #FAF7EE;
+    }
+
+    .auth-deco-panel::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+            radial-gradient(ellipse at 80% 80%, rgba(58, 107, 75, 0.6) 0%, transparent 60%),
+            radial-gradient(ellipse at 20% 20%, rgba(200, 90, 50, 0.3) 0%, transparent 55%);
+        pointer-events: none;
+    }
+
+    /* Decorative botanical rings */
+    .auth-deco-ring {
+        position: absolute;
+        border-radius: 50%;
+        border: 1px solid rgba(250, 247, 238, 0.07);
+    }
+    .auth-deco-ring:nth-child(1) { width: 340px; height: 340px; top: -80px; right: -100px; }
+    .auth-deco-ring:nth-child(2) { width: 220px; height: 220px; top: 30px; right: -20px; }
+    .auth-deco-ring:nth-child(3) { width: 180px; height: 180px; bottom: 60px; left: -60px; border-color: rgba(212, 155, 75, 0.12); }
+
+    .auth-deco-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .auth-deco-eyebrow {
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--farm-gold);
+        margin-bottom: 1rem;
+    }
+
+    .auth-deco-title {
+        font-family: 'Fraunces', serif;
+        font-size: clamp(2rem, 3vw, 2.8rem);
+        font-weight: 600;
+        line-height: 1.15;
+        margin-bottom: 1.2rem;
+    }
+
+    .auth-deco-title em {
+        font-family: 'Cormorant Garamond', serif;
+        font-style: italic;
+        font-weight: 400;
+        color: var(--farm-gold);
+    }
+
+    .auth-deco-desc {
+        font-size: 0.88rem;
+        color: rgba(250, 247, 238, 0.68);
+        line-height: 1.75;
+        max-width: 320px;
+        margin-bottom: 2.5rem;
+    }
+
+    .auth-deco-perks {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .auth-deco-perk {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-size: 0.82rem;
+        color: rgba(250, 247, 238, 0.8);
+    }
+
+    .auth-deco-perk-icon {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: rgba(250, 247, 238, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 0.85rem;
+    }
+
+    .auth-deco-signin-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--farm-gold);
+        font-size: 0.76rem;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        text-decoration: none;
+        transition: opacity 0.2s;
+    }
+
+    .auth-deco-signin-link:hover { opacity: 0.8; }
+
+    /* ── RIGHT FORM PANEL ── */
+    .auth-form-panel {
+        flex: 1;
+        background: var(--farm-cream);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 3rem 2rem;
+    }
+
+    .auth-form-box {
+        width: 100%;
+        max-width: 460px;
+    }
+
+    /* ── Crest / Logo icon ── */
+    .auth-crest {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: var(--farm-green);
+        color: #FAF7EE;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 6px 20px rgba(38, 70, 52, 0.28);
+    }
+
+    .auth-crest svg {
+        width: 24px;
+        height: 24px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2;
+    }
+
+    /* ── Form Header ── */
+    .auth-form-eyebrow {
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--farm-terracotta);
+        margin-bottom: 0.35rem;
+    }
+
+    .auth-form-title {
+        font-family: 'Fraunces', serif;
+        font-size: 2.4rem;
+        font-weight: 600;
+        color: var(--farm-green);
+        line-height: 1.1;
+        margin-bottom: 0.4rem;
+    }
+
+    .auth-form-title em {
+        font-family: 'Cormorant Garamond', serif;
+        font-style: italic;
+        font-weight: 400;
+        color: var(--farm-terracotta);
+    }
+
+    .auth-form-subtitle {
+        font-size: 0.86rem;
+        color: var(--farm-soil-light);
+        margin-bottom: 2rem;
+        line-height: 1.5;
+    }
+
+    /* ── Form Fields ── */
+    .rg-form-group {
+        margin-bottom: 1.25rem;
+        position: relative;
+    }
+
+    .rg-label {
+        display: block;
+        font-family: 'Jost', sans-serif;
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--farm-soil-mid);
+        margin-bottom: 0.4rem;
+    }
+
+    .rg-input {
+        width: 100%;
+        background: #FAF7EE;
+        border: 1.5px solid rgba(38, 70, 52, 0.18);
+        border-radius: 10px;
+        padding: 0.85rem 1.1rem;
+        font-family: 'Jost', sans-serif;
+        font-size: 0.92rem;
+        color: var(--farm-soil);
+        outline: none;
+        transition: all 0.22s ease;
+        box-sizing: border-box;
+    }
+
+    .rg-input:focus {
+        border-color: var(--farm-green);
+        background: #FFFFFF;
+        box-shadow: 0 0 0 3px rgba(38, 70, 52, 0.1);
+    }
+
+    .rg-input::placeholder {
+        color: var(--farm-soil-light);
+        opacity: 0.7;
+    }
+
+    .rg-grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    /* Password toggle */
+    .rg-pw-wrap {
+        position: relative;
+    }
+
+    .rg-pw-toggle {
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--farm-soil-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        transition: color 0.2s;
+    }
+
+    .rg-pw-toggle:hover { color: var(--farm-green); }
+
+    /* ── Submit Button ── */
+    .btn-rg-submit {
+        width: 100%;
+        background: var(--farm-green);
+        color: #FAF7EE;
+        border: none;
+        border-radius: 999px;
+        padding: 1rem;
+        font-family: 'Jost', sans-serif;
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+        margin-top: 1.75rem;
+        box-shadow: 0 6px 20px rgba(38, 70, 52, 0.28);
+        transition: all 0.25s ease;
+    }
+
+    .btn-rg-submit:hover {
+        background: var(--farm-green-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 28px rgba(38, 70, 52, 0.36);
+    }
+
+    /* ── Error Banner ── */
+    .rg-error-banner {
+        background: rgba(200, 90, 50, 0.09);
+        border-left: 3px solid var(--farm-terracotta);
+        color: var(--farm-terracotta-dark);
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        font-size: 0.83rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    /* ── Footer signin link ── */
+    .rg-footer-link {
+        text-align: center;
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px dashed rgba(38, 70, 52, 0.12);
+        font-size: 0.86rem;
+        color: var(--farm-soil-light);
+    }
+
+    .rg-footer-link a {
+        color: var(--farm-terracotta);
+        font-weight: 600;
+        text-decoration: none;
+        border-bottom: 1px solid transparent;
+        transition: border-color 0.2s;
+    }
+
+    .rg-footer-link a:hover {
+        border-bottom-color: var(--farm-terracotta);
+    }
+
+    /* ── Divider ── */
+    .rg-divider {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin: 1.5rem 0 0;
+        color: var(--farm-soil-light);
+        font-size: 0.78rem;
+    }
+
+    .rg-divider::before,
+    .rg-divider::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: rgba(38, 70, 52, 0.12);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+        .auth-deco-panel { display: none; }
+        .auth-form-panel { padding: 2rem 1.25rem; }
+        .rg-grid-2 { grid-template-columns: 1fr; gap: 0; }
+        .auth-form-title { font-size: 2rem; }
+    }
+</style>
+
+<div class="auth-page">
+
+    <!-- ── LEFT: Decorative Panel ── -->
+    <div class="auth-deco-panel">
+        <!-- Rings -->
+        <div class="auth-deco-ring"></div>
+        <div class="auth-deco-ring"></div>
+        <div class="auth-deco-ring"></div>
+
+        <div class="auth-deco-content">
+            <div class="auth-deco-eyebrow">🌱 Farm Collective</div>
+            <h2 class="auth-deco-title">
+                Eat Well.<br><em>Live Gently.</em>
+            </h2>
+            <p class="auth-deco-desc">
+                Join over 2,000 households enjoying wholesome, chemical-free greens,
+                stone-ground flours, and pure farm dairy — delivered fresh each morning.
+            </p>
+
+            <div class="auth-deco-perks">
+                <div class="auth-deco-perk">
+                    <div class="auth-deco-perk-icon">🚜</div>
+                    <span>Farm-sourced within 6 hours of harvest</span>
+                </div>
+                <div class="auth-deco-perk">
+                    <div class="auth-deco-perk-icon">🌿</div>
+                    <span>Zero pesticides, 100% certified organic</span>
+                </div>
+                <div class="auth-deco-perk">
+                    <div class="auth-deco-perk-icon">📦</div>
+                    <span>Eco-friendly, plastic-free packaging</span>
+                </div>
+                <div class="auth-deco-perk">
+                    <div class="auth-deco-perk-icon">🤝</div>
+                    <span>Fair share directly to our farmers</span>
+                </div>
+            </div>
+
+            <a href="{% url 'login' %}" class="auth-deco-signin-link">
+                Already a member? Sign In →
+            </a>
+        </div>
+    </div>
+
+    <!-- ── RIGHT: Form Panel ── -->
+    <div class="auth-form-panel">
+        <div class="auth-form-box">
+
+            <!-- Crest -->
+            <div class="auth-crest">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 2L9.5 8.5C8 12.5 5 15 2 16c3.5 1 7.5 0 10-3 2.5 3 6.5 4 10 3-3-1-6-3.5-7.5-7.5L12 2z"></path>
+                    <path d="M12 13v9"></path>
+                </svg>
+            </div>
+
+            <!-- Header -->
+            <div class="auth-form-eyebrow">Join the Collective</div>
+            <h1 class="auth-form-title">Create <em>Account</em></h1>
+            <p class="auth-form-subtitle">
+                Get direct access to morning farm harvests and fresh doorstep deliveries.
+            </p>
+
+            <!-- Error -->
+            {% if error %}
+            <div class="rg-error-banner">
+                <span>⚠️</span>
+                <span>{{ error }}</span>
+            </div>
+            {% endif %}
+
+            <!-- Form -->
+            <form method="POST" action="{% url 'signup' %}">
+                {% csrf_token %}
+
+                <!-- Name row -->
+                <div class="rg-grid-2">
+                    <div class="rg-form-group">
+                        <label class="rg-label" for="first_name">First Name</label>
+                        <input class="rg-input" type="text" id="first_name" name="first_name"
+                               placeholder="Arjun" value="{{ request.POST.first_name }}" required>
+                    </div>
+                    <div class="rg-form-group">
+                        <label class="rg-label" for="last_name">Last Name</label>
+                        <input class="rg-input" type="text" id="last_name" name="last_name"
+                               placeholder="Kumar" value="{{ request.POST.last_name }}">
+                    </div>
+                </div>
+
+                <div class="rg-form-group">
+                    <label class="rg-label" for="username">Username</label>
+                    <input class="rg-input" type="text" id="username" name="username"
+                           placeholder="your_username" autocomplete="username"
+                           value="{{ request.POST.username }}" required>
+                </div>
+
+                <div class="rg-form-group">
+                    <label class="rg-label" for="email">Email Address</label>
+                    <input class="rg-input" type="email" id="email" name="email"
+                           placeholder="you@example.com" autocomplete="email"
+                           value="{{ request.POST.email }}" required>
+                </div>
+
+                <div class="rg-form-group">
+                    <label class="rg-label" for="password1">Password</label>
+                    <div class="rg-pw-wrap">
+                        <input class="rg-input" type="password" id="password1" name="password1"
+                               placeholder="••••••••" autocomplete="new-password"
+                               style="padding-right: 3rem;" required>
+                        <button type="button" class="rg-pw-toggle" onclick="toggleRgPw('password1', this)" title="Show/hide password">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="rg-form-group">
+                    <label class="rg-label" for="password2">Confirm Password</label>
+                    <div class="rg-pw-wrap">
+                        <input class="rg-input" type="password" id="password2" name="password2"
+                               placeholder="••••••••" autocomplete="new-password"
+                               style="padding-right: 3rem;" required>
+                        <button type="button" class="rg-pw-toggle" onclick="toggleRgPw('password2', this)" title="Show/hide password">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-rg-submit">
+                    <span>Create My Farm Account</span>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </button>
+            </form>
+
+            <div class="rg-footer-link">
+                Already have an account?
+                <a href="{% url 'login' %}">Sign In to Pantry</a>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<script>
+function toggleRgPw(id, btn) {
+    const input = document.getElementById(id);
+    if (!input) return;
+    const isText = input.type === 'text';
+    input.type = isText ? 'password' : 'text';
+    btn.innerHTML = isText
+        ? `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`
+        : `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`;
+}
+
+// Live password match validation
+const pw1 = document.getElementById('password1');
+const pw2 = document.getElementById('password2');
+if (pw1 && pw2) {
+    pw2.addEventListener('input', () => {
+        if (pw2.value && pw1.value !== pw2.value) {
+            pw2.style.borderColor = 'var(--farm-terracotta)';
+            pw2.style.boxShadow = '0 0 0 3px rgba(200, 90, 50, 0.12)';
+        } else {
+            pw2.style.borderColor = '';
+            pw2.style.boxShadow = '';
+        }
+    });
+}
+</script>
+{% endblock %}

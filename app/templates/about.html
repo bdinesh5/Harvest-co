@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Our Soil & Farmers — Harvest & Co.{% endblock %}
+
+{% block content %}
+<style>
+    .about-hero {
+        background: var(--farm-green-dark);
+        padding: 5rem 0 4.5rem;
+        position: relative;
+        overflow: hidden;
+        color: #FAF7EE;
+        text-align: center;
+    }
+
+    .about-hero::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(ellipse at 50% 50%, rgba(58, 107, 75, 0.4) 0%, transparent 70%);
+    }
+
+    .about-section {
+        padding: 5rem 0;
+    }
+
+    .pillar-card {
+        background: #F6F1E8;
+        border: 1px solid rgba(38, 70, 52, 0.12);
+        border-radius: 16px;
+        padding: 2.25rem;
+        text-align: center;
+        transition: all 0.3s;
+    }
+
+    .pillar-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 30px rgba(38, 70, 52, 0.1);
+        border-color: var(--farm-green);
+    }
+
+    .pillar-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .pillar-title {
+        font-family: 'Fraunces', serif;
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: var(--farm-green);
+        margin-bottom: 0.65rem;
+    }
+
+    .pillar-desc {
+        font-size: 0.88rem;
+        color: var(--farm-soil-mid);
+        line-height: 1.7;
+    }
+</style>
+
+<div class="about-hero">
+    <div class="container" style="position: relative; z-index: 1; max-width: 780px;">
+        <div class="mp-eyebrow" style="color: var(--farm-gold);">The Living Soil & Collective</div>
+        <h1 style="font-family: 'Fraunces', serif; font-size: clamp(2.5rem, 5.5vw, 4.2rem); font-weight: 600; line-height: 1.1; margin-bottom: 1.25rem;">
+            Rooted in Soil.<br>
+            <em>Cultivated with Care.</em>
+        </h1>
+        <p style="font-size: 1.05rem; color: rgba(250, 247, 238, 0.8); line-height: 1.8; font-weight: 300;">
+            Harvest & Co. is a bridge connecting conscious city kitchens with certified regenerative growers, heirloom seed preservers, and traditional oil presses.
+        </p>
+    </div>
+</div>
+
+<div class="about-section">
+    <div class="container">
+
+        <div class="row align-items-center g-5 mb-5">
+            <div class="col-lg-6">
+                <span class="section-eyebrow-farm" style="display: flex;">Our Mission</span>
+                <h2 style="font-family: 'Fraunces', serif; font-size: clamp(2rem, 3.5vw, 2.8rem); font-weight: 600; color: var(--farm-green); margin-bottom: 1.25rem;">
+                    Pure, Honest Food as <em>Nature Intended</em>
+                </h2>
+                <p style="color: var(--farm-soil-mid); font-size: 0.95rem; line-height: 1.8; margin-bottom: 1.25rem;">
+                    Modern commercial produce is often harvested prematurely, treated with artificial ripening agents, and stored in cold lockers for weeks. We believe food should be harvested when fully ripened on the plant under natural sunlight.
+                </p>
+                <p style="color: var(--farm-soil-mid); font-size: 0.95rem; line-height: 1.8;">
+                    Every single fruit, leafy green, spice, and drop of oil in our pantry is sourced directly from ethical regional farms within 100 km, ensuring 0 chemical pesticide residues and peak biological vitality.
+                </p>
+            </div>
+            <div class="col-lg-6">
+                <div style="background: #EFE8DA; border-radius: 24px; padding: 3rem; border: 2px dashed rgba(38,70,52,0.2); text-align: center;">
+                    <div style="font-family: 'Caveat', cursive; font-size: 3rem; color: var(--farm-terracotta); margin-bottom: 0.5rem;">
+                        "He who plants a seed trusts in tomorrow."
+                    </div>
+                    <div style="font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--farm-soil-light); font-weight: 600;">
+                        — Harvest & Co. Farmer Creed
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pillars -->
+        <div class="row g-4 mt-4">
+            <div class="col-md-4">
+                <div class="pillar-card reveal">
+                    <div class="pillar-icon">🌱</div>
+                    <div class="pillar-title">100% Bio-Organic</div>
+                    <p class="pillar-desc">Composted neem, cow dung, and natural micro-flora enrich our living soils without synthetic NPK fertilizers.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="pillar-card reveal">
+                    <div class="pillar-icon">🤝</div>
+                    <div class="pillar-title">Fair Farmer Trade</div>
+                    <p class="pillar-desc">We cut out greedy middlemen, ensuring our partner growers receive up to 80% of retail price directly.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="pillar-card reveal">
+                    <div class="pillar-icon">♻️</div>
+                    <div class="pillar-title">Zero Plastic Waste</div>
+                    <p class="pillar-desc">Every order is hand-packed in compostable kraft paper sacks, cotton twine, and glass returnable jars.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

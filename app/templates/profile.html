@@ -1,0 +1,626 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Member Profile & Harvest Settings — Harvest & Co.{% endblock %}
+
+{% block content %}
+<style>
+    /* ══════════════════════════════════════════
+       PROFILE HERO BANNER
+    ══════════════════════════════════════════ */
+    .prof-hero {
+        background: var(--farm-green-dark);
+        padding: 4rem 0 3.5rem;
+        position: relative;
+        overflow: hidden;
+        color: #FAF7EE;
+    }
+
+    .prof-hero::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+            radial-gradient(ellipse at 15% 50%, rgba(58, 107, 75, 0.5) 0%, transparent 60%),
+            radial-gradient(ellipse at 85% 30%, rgba(200, 90, 50, 0.25) 0%, transparent 50%);
+        pointer-events: none;
+    }
+
+    .prof-hero-card {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        position: relative;
+        z-index: 1;
+        flex-wrap: wrap;
+    }
+
+    .prof-avatar-wrap {
+        position: relative;
+        width: 100px;
+        height: 100px;
+        flex-shrink: 0;
+    }
+
+    .prof-avatar-img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid var(--farm-gold);
+        box-shadow: 0 8px 24px rgba(26, 51, 37, 0.4);
+        background: var(--farm-green);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Fraunces', serif;
+        font-size: 2.5rem;
+        font-weight: 600;
+        color: var(--farm-cream);
+        text-transform: uppercase;
+    }
+
+    .prof-hero-info {
+        flex: 1;
+    }
+
+    .prof-hero-name {
+        font-family: 'Fraunces', serif;
+        font-size: clamp(2rem, 3.5vw, 2.8rem);
+        font-weight: 600;
+        line-height: 1.1;
+        margin-bottom: 0.35rem;
+        color: var(--farm-cream);
+    }
+
+    .prof-hero-name em {
+        font-family: 'Cormorant Garamond', serif;
+        font-style: italic;
+        font-weight: 400;
+        color: var(--farm-gold);
+    }
+
+    .prof-hero-meta {
+        font-size: 0.85rem;
+        color: rgba(250, 247, 238, 0.7);
+        display: flex;
+        align-items: center;
+        gap: 1.25rem;
+        flex-wrap: wrap;
+    }
+
+    .prof-hero-meta span {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+
+    /* Stat Badges */
+    .prof-stat-strip {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-top: 1.5rem;
+    }
+
+    .prof-stat-badge {
+        background: rgba(250, 247, 238, 0.08);
+        border: 1px solid rgba(250, 247, 238, 0.15);
+        border-radius: 10px;
+        padding: 0.6rem 1.1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .stat-num {
+        font-family: 'Fraunces', serif;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--farm-gold);
+        line-height: 1;
+    }
+
+    .stat-lbl {
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: rgba(250, 247, 238, 0.65);
+        line-height: 1.2;
+    }
+
+    /* ══════════════════════════════════════════
+       MAIN CONTENT & TABS
+    ══════════════════════════════════════════ */
+    .prof-main-wrap {
+        padding: 3.5rem 0 6rem;
+    }
+
+    /* Tab Buttons */
+    .prof-tabs {
+        display: flex;
+        gap: 0.5rem;
+        border-bottom: 2px solid rgba(38, 70, 52, 0.1);
+        margin-bottom: 2.5rem;
+        overflow-x: auto;
+    }
+
+    .prof-tab-btn {
+        background: none;
+        border: none;
+        padding: 0.85rem 1.5rem;
+        font-family: 'Jost', sans-serif;
+        font-size: 0.82rem;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--farm-soil-light);
+        cursor: pointer;
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.25s ease;
+        white-space: nowrap;
+    }
+
+    .prof-tab-btn:hover {
+        color: var(--farm-green);
+    }
+
+    .prof-tab-btn.active {
+        color: var(--farm-green);
+    }
+
+    .prof-tab-btn.active::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--farm-terracotta);
+        border-radius: 3px 3px 0 0;
+    }
+
+    /* Tab Panes */
+    .prof-tab-pane {
+        display: none;
+        animation: tabFadeIn 0.35s ease both;
+    }
+
+    .prof-tab-pane.active {
+        display: block;
+    }
+
+    @keyframes tabFadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Cards */
+    .prof-card-box {
+        background: #F6F1E8;
+        border: 1px solid rgba(38, 70, 52, 0.12);
+        border-radius: 18px;
+        padding: 2.5rem;
+        box-shadow: 0 8px 30px rgba(38, 70, 52, 0.04);
+    }
+
+    .prof-section-header {
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px dashed rgba(38, 70, 52, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .prof-section-title {
+        font-family: 'Fraunces', serif;
+        font-size: 1.35rem;
+        font-weight: 600;
+        color: var(--farm-green);
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        margin: 0;
+    }
+
+    .prof-grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.25rem;
+    }
+
+    /* Form controls */
+    .farm-form-row {
+        margin-bottom: 1.35rem;
+    }
+
+    .farm-label {
+        font-family: 'Jost', sans-serif;
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--farm-soil-mid);
+        margin-bottom: 0.4rem;
+        display: block;
+    }
+
+    .farm-input {
+        width: 100%;
+        background: var(--farm-cream);
+        border: 1.5px solid rgba(38, 70, 52, 0.18);
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        font-family: 'Jost', sans-serif;
+        font-size: 0.88rem;
+        color: var(--farm-soil);
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .farm-input:focus {
+        border-color: var(--farm-green);
+        box-shadow: 0 0 0 3px rgba(38, 70, 52, 0.1);
+    }
+
+    /* Password strength */
+    .pw-strength-box {
+        margin-top: 0.5rem;
+        display: flex;
+        gap: 4px;
+        align-items: center;
+    }
+
+    .pw-strength-segment {
+        flex: 1;
+        height: 3px;
+        background: rgba(38, 70, 52, 0.12);
+        border-radius: 2px;
+        transition: all 0.3s ease;
+    }
+
+    .pw-strength-segment.weak { background: #c0392b; }
+    .pw-strength-segment.fair { background: #e67e22; }
+    .pw-strength-segment.good { background: var(--farm-gold); }
+    .pw-strength-segment.strong { background: var(--farm-green); }
+
+    /* Orders Tab in Profile */
+    .prof-order-item {
+        background: var(--farm-cream);
+        border: 1px solid rgba(38, 70, 52, 0.1);
+        border-radius: 12px;
+        padding: 1.25rem 1.5rem;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+        transition: all 0.2s;
+    }
+
+    .prof-order-item:hover {
+        border-color: var(--farm-green);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(38, 70, 52, 0.06);
+    }
+
+    @media (max-width: 768px) {
+        .prof-grid-2 {
+            grid-template-columns: 1fr;
+        }
+        .prof-hero-card {
+            flex-direction: column;
+            text-align: center;
+        }
+        .prof-hero-meta {
+            justify-content: center;
+        }
+        .prof-stat-strip {
+            justify-content: center;
+        }
+        .prof-card-box {
+            padding: 1.5rem;
+        }
+    }
+</style>
+
+<!-- ── HERO MEMBER HEADER ── -->
+<div class="prof-hero">
+    <div class="container">
+        <div class="prof-hero-card">
+
+            <!-- Avatar -->
+            <div class="prof-avatar-wrap">
+                {% if profile.avatar %}
+                <img class="prof-avatar-img" src="{{ profile.avatar.url }}" alt="{{ user.username }}">
+                {% else %}
+                <div class="prof-avatar-img">
+                    {{ user.first_name|first|default:user.username|first }}
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Member Info -->
+            <div class="prof-hero-info">
+                <div class="mp-eyebrow" style="color: var(--farm-gold); margin-bottom: 0.3rem;">Harvest Member Collective</div>
+                <h1 class="prof-hero-name">
+                    {{ user.get_full_name|default:user.username }} <em>• Farm Member</em>
+                </h1>
+                <div class="prof-hero-meta">
+                    <span>✉️ {{ user.email }}</span>
+                    <span>📍 {{ profile.city|default:"Location Not Set" }}{% if profile.state %}, {{ profile.state }}{% endif %}</span>
+                    <span>🌱 Member since {{ user.date_joined|date:"M Y" }}</span>
+                </div>
+
+                <div class="prof-stat-strip">
+                    <div class="prof-stat-badge">
+                        <div class="stat-num">{{ orders.count }}</div>
+                        <div class="stat-lbl">Harvest<br>Orders</div>
+                    </div>
+                    <div class="prof-stat-badge">
+                        <div class="stat-num">100%</div>
+                        <div class="stat-lbl">Organic<br>Certified</div>
+                    </div>
+                    <div class="prof-stat-badge">
+                        <div class="stat-num">₹0</div>
+                        <div class="stat-lbl">Plastic<br>Footprint</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- ── MAIN PROFILE TABS & FORMS ── -->
+<div class="prof-main-wrap">
+    <div class="container" style="max-width: 960px;">
+
+        <!-- Django Feedback Alerts -->
+        {% if messages %}
+        <div style="margin-bottom: 2rem;">
+            {% for message in messages %}
+            <div style="background: var(--farm-green-soft); border-left: 3px solid var(--farm-green); color: var(--farm-green-dark); padding: 0.9rem 1.25rem; border-radius: 8px; font-size: 0.85rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                <span>✓</span>
+                <span>{{ message }}</span>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Tab Navigation Buttons -->
+        <div class="prof-tabs">
+            <button class="prof-tab-btn active" onclick="switchProfTab('tab-details', this)">
+                <span>📍</span>
+                <span>Personal &amp; Delivery Destination</span>
+            </button>
+            <button class="prof-tab-btn" onclick="switchProfTab('tab-orders', this)">
+                <span>🧺</span>
+                <span>Harvest Orders ({{ orders.count }})</span>
+            </button>
+            <button class="prof-tab-btn" onclick="switchProfTab('tab-security', this)">
+                <span>🔒</span>
+                <span>Security &amp; Password</span>
+            </button>
+        </div>
+
+        <!-- ══════════════════════════════════════════
+             TAB 1: PERSONAL & DELIVERY DETAILS
+        ══════════════════════════════════════════ -->
+        <div class="prof-tab-pane active" id="tab-details">
+            <div class="prof-card-box">
+                <div class="prof-section-header">
+                    <h3 class="prof-section-title">
+                        <span>🌱</span>
+                        <span>Member Information &amp; Delivery Address</span>
+                    </h3>
+                    <span style="font-size: 0.76rem; color: var(--farm-soil-light);">Default doorstep location</span>
+                </div>
+
+                <form method="POST" action="{% url 'profile' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="update_info">
+
+                    <div class="prof-grid-2">
+                        <div class="farm-form-row">
+                            <label class="farm-label" for="first_name">First Name</label>
+                            <input class="farm-input" type="text" id="first_name" name="first_name" value="{{ user.first_name }}" required>
+                        </div>
+                        <div class="farm-form-row">
+                            <label class="farm-label" for="last_name">Last Name</label>
+                            <input class="farm-input" type="text" id="last_name" name="last_name" value="{{ user.last_name }}">
+                        </div>
+                    </div>
+
+                    <div class="prof-grid-2">
+                        <div class="farm-form-row">
+                            <label class="farm-label" for="email">Email Address</label>
+                            <input class="farm-input" type="email" id="email" name="email" value="{{ user.email }}" required>
+                        </div>
+                        <div class="farm-form-row">
+                            <label class="farm-label" for="phone">Phone Number</label>
+                            <input class="farm-input" type="tel" id="phone" name="phone" value="{{ profile.phone }}" placeholder="e.g. 98765 43210">
+                        </div>
+                    </div>
+
+                    <div class="farm-form-row">
+                        <label class="farm-label" for="address">Street Address / House / Landmark</label>
+                        <textarea class="farm-input" id="address" name="address" rows="2" placeholder="House name, street number, area landmark">{{ profile.address }}</textarea>
+                    </div>
+
+                    <div class="prof-grid-2">
+                        <div class="farm-form-row">
+                            <label class="farm-label" for="city">City / District</label>
+                            <input class="farm-input" type="text" id="city" name="city" value="{{ profile.city|default:'Chennai' }}">
+                        </div>
+                        <div class="farm-form-row">
+                            <label class="farm-label" for="state">State</label>
+                            <input class="farm-input" type="text" id="state" name="state" value="{{ profile.state|default:'Tamil Nadu' }}">
+                        </div>
+                    </div>
+
+                    <div class="farm-form-row" style="background: rgba(38,70,52,0.04); border: 1px dashed rgba(38,70,52,0.15); border-radius: 10px; padding: 1.25rem;">
+                        <label class="farm-label" for="avatar" style="margin-bottom: 0.3rem;">Profile Picture / Avatar</label>
+                        <input type="file" id="avatar" name="avatar" accept="image/*" style="font-size: 0.82rem; color: var(--farm-soil-mid);">
+                        <div style="font-size: 0.72rem; color: var(--farm-soil-light); margin-top: 0.35rem;">
+                            Upload a JPEG or PNG image to display on your member profile.
+                        </div>
+                    </div>
+
+                    <div style="display: flex; justify-content: flex-end; margin-top: 2rem;">
+                        <button type="submit" class="btn-harvest-main" style="border: none; cursor: pointer;">
+                            <span>Save Profile Changes</span>
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════
+             TAB 2: HARVEST ORDERS
+        ══════════════════════════════════════════ -->
+        <div class="prof-tab-pane" id="tab-orders">
+            <div class="prof-card-box">
+                <div class="prof-section-header">
+                    <h3 class="prof-section-title">
+                        <span>📦</span>
+                        <span>My Farm Orders &amp; Delivery Receipts</span>
+                    </h3>
+                    <a href="{% url 'marketplace' %}" class="btn-harvest-outline" style="font-size: 0.7rem; padding: 0.4rem 0.9rem; color: var(--farm-green); border-color: rgba(38,70,52,0.3);">
+                        + New Order
+                    </a>
+                </div>
+
+                {% if orders %}
+                <div>
+                    {% for order in orders %}
+                    <div class="prof-order-item">
+                        <div>
+                            <div style="font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--farm-soil-light);">
+                                Order #{{ order.id }} • {{ order.created_at|date:"d M Y, h:i A" }}
+                            </div>
+                            <div style="font-family: 'Fraunces', serif; font-size: 1.25rem; font-weight: 700; color: var(--farm-soil); margin: 0.2rem 0;">
+                                ₹{{ order.grand_total }}
+                            </div>
+                            <div style="font-size: 0.78rem; color: var(--farm-soil-mid);">
+                                {{ order.items.count }} item{{ order.items.count|pluralize }} • Destination: {{ order.city }}
+                            </div>
+                        </div>
+
+                        <div style="display: flex; align-items: center; gap: 0.65rem; flex-wrap: wrap;">
+                            <span style="background: var(--farm-green-soft); color: var(--farm-green); font-size: 0.7rem; font-weight: 600; padding: 0.25rem 0.75rem; border-radius: 999px; text-transform: uppercase;">
+                                {{ order.get_status_display }}
+                            </span>
+                            <a href="{% url 'order_detail' order.id %}" class="btn-harvest-main" style="padding: 0.45rem 1rem; font-size: 0.72rem;">
+                                Track
+                            </a>
+                            <a href="{% url 'order_pdf' order.id %}" class="btn-harvest-outline" style="padding: 0.45rem 0.85rem; font-size: 0.72rem; color: var(--farm-green); border-color: rgba(38,70,52,0.3);">
+                                ↓ PDF
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div style="text-align: center; padding: 3.5rem 1.5rem;">
+                    <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">🧺</div>
+                    <h4 style="font-family: 'Fraunces', serif; color: var(--farm-green);">No Harvest Orders Yet</h4>
+                    <p style="color: var(--farm-soil-light); font-size: 0.85rem; margin-bottom: 1.25rem;">Explore today's fresh morning greens, fruits, and cold-pressed oils.</p>
+                    <a href="{% url 'marketplace' %}" class="btn-harvest-main" style="display: inline-flex; font-size: 0.74rem;">
+                        Shop Fresh Produce →
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════
+             TAB 3: SECURITY & PASSWORD
+        ══════════════════════════════════════════ -->
+        <div class="prof-tab-pane" id="tab-security">
+            <div class="prof-card-box">
+                <div class="prof-section-header">
+                    <h3 class="prof-section-title">
+                        <span>🔒</span>
+                        <span>Account Security &amp; Password</span>
+                    </h3>
+                    <span style="font-size: 0.76rem; color: var(--farm-soil-light);">Protect your farm member profile</span>
+                </div>
+
+                <form method="POST" action="{% url 'profile' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="change_password">
+
+                    <div class="farm-form-row">
+                        <label class="farm-label" for="current_password">Current Password</label>
+                        <input class="farm-input" type="password" id="current_password" name="current_password" placeholder="••••••••" required>
+                    </div>
+
+                    <div class="prof-grid-2">
+                        <div class="farm-form-row">
+                            <label class="farm-label" for="new_password">New Password (min. 8 characters)</label>
+                            <input class="farm-input" type="password" id="new_password" name="new_password" placeholder="••••••••" required oninput="evalProfilePw(this.value)">
+                            <div class="pw-strength-box" id="profPwStrength">
+                                <div class="pw-strength-segment" id="s1"></div>
+                                <div class="pw-strength-segment" id="s2"></div>
+                                <div class="pw-strength-segment" id="s3"></div>
+                                <div class="pw-strength-segment" id="s4"></div>
+                            </div>
+                        </div>
+                        <div class="farm-form-row">
+                            <label class="farm-label" for="confirm_password">Confirm New Password</label>
+                            <input class="farm-input" type="password" id="confirm_password" name="confirm_password" placeholder="••••••••" required>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; justify-content: flex-end; margin-top: 2rem;">
+                        <button type="submit" class="btn-harvest-main" style="background: var(--farm-green); border: none; cursor: pointer;">
+                            <span>Update Security Password</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+function switchProfTab(tabId, btn) {
+    document.querySelectorAll('.prof-tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.prof-tab-pane').forEach(p => p.classList.remove('active'));
+
+    btn.classList.add('active');
+    const target = document.getElementById(tabId);
+    if (target) target.classList.add('active');
+}
+
+function evalProfilePw(val) {
+    const s1 = document.getElementById('s1');
+    const s2 = document.getElementById('s2');
+    const s3 = document.getElementById('s3');
+    const s4 = document.getElementById('s4');
+    const segs = [s1, s2, s3, s4];
+    segs.forEach(s => s.className = 'pw-strength-segment');
+
+    if (!val) return;
+    let score = 0;
+    if (val.length >= 8) score++;
+    if (/[A-Z]/.test(val)) score++;
+    if (/[0-9]/.test(val)) score++;
+    if (/[^A-Za-z0-9]/.test(val)) score++;
+
+    const cls = ['', 'weak', 'fair', 'good', 'strong'];
+    for (let i = 0; i < score; i++) {
+        segs[i].classList.add(cls[score]);
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,928 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Harvest & Co. — Artisanal Farm Grocer{% endblock %}</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Google Fonts: Fraunces, Cormorant Garamond, Jost, Caveat -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,400;1,600&family=Jost:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <style>
+        :root {
+            /* ── Artisanal Farm-to-Table Palette ── */
+            --farm-green: #264634;
+            --farm-green-dark: #1A3325;
+            --farm-green-light: #3A6B4B;
+            --farm-green-soft: #EBF3ED;
+            --farm-cream: #FAF7EE;
+            --farm-cream-dark: #EFE8D6;
+            --farm-kraft: #F3EBE0;
+            --farm-terracotta: #C85A32;
+            --farm-terracotta-dark: #A64421;
+            --farm-gold: #D49B4B;
+            --farm-soil: #261E18;
+            --farm-soil-mid: #5A4D43;
+            --farm-soil-light: #9C8C80;
+
+            /* Compatibility aliases */
+            --sandal: var(--farm-cream);
+            --sandal-dark: var(--farm-cream-dark);
+            --brown: var(--farm-green);
+            --brown-dark: var(--farm-green-dark);
+            --brown-light: var(--farm-green-light);
+            --text-dark: var(--farm-soil);
+            --text-mid: var(--farm-soil-mid);
+            --text-light: var(--farm-soil-light);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--farm-cream);
+            color: var(--farm-soil);
+            font-family: 'Jost', sans-serif;
+            font-weight: 300;
+            letter-spacing: 0.01em;
+            background-image: radial-gradient(rgba(38, 70, 52, 0.03) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        /* ── TOP FRESHNESS BAR ── */
+        .top-fresh-bar {
+            background: var(--farm-green-dark);
+            color: rgba(250, 247, 238, 0.85);
+            font-size: 0.72rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            padding: 0.45rem 1rem;
+            text-align: center;
+            font-weight: 400;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.25rem;
+            border-bottom: 1px solid rgba(250, 247, 238, 0.1);
+        }
+
+        .top-fresh-bar span.badge-pill {
+            background: var(--farm-terracotta);
+            color: #FAF7EE;
+            padding: 0.15rem 0.5rem;
+            border-radius: 999px;
+            font-size: 0.62rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+        }
+
+        /* ── NAVBAR ── */
+        .navbar {
+            background-color: rgba(250, 247, 238, 0.94) !important;
+            border-bottom: 1px solid rgba(38, 70, 52, 0.12);
+            padding: 0.9rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            box-shadow: 0 4px 24px rgba(38, 70, 52, 0.08);
+            background-color: rgba(250, 247, 238, 0.98) !important;
+            padding: 0.7rem 0;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            text-decoration: none;
+            color: var(--farm-green) !important;
+        }
+
+        .brand-logo-icon {
+            width: 34px;
+            height: 34px;
+            background: var(--farm-green);
+            color: var(--farm-cream);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(38, 70, 52, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .navbar-brand:hover .brand-logo-icon {
+            transform: rotate(-8deg) scale(1.05);
+        }
+
+        .brand-logo-icon svg {
+            width: 18px;
+            height: 18px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .brand-text-wrap {
+            display: flex;
+            flex-direction: column;
+            line-height: 1;
+        }
+
+        .brand-title {
+            font-family: 'Fraunces', serif;
+            font-size: 1.45rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            color: var(--farm-green);
+        }
+
+        .brand-title em {
+            font-style: italic;
+            font-family: 'Cormorant Garamond', serif;
+            color: var(--farm-terracotta);
+            font-weight: 400;
+            margin-left: 0.15rem;
+        }
+
+        .brand-tagline {
+            font-family: 'Caveat', cursive;
+            font-size: 0.82rem;
+            color: var(--farm-soil-light);
+            letter-spacing: 0.02em;
+            margin-top: 0.15rem;
+        }
+
+        .nav-link {
+            font-family: 'Jost', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 500;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--farm-soil-mid) !important;
+            padding: 0.4rem 1rem !important;
+            position: relative;
+            transition: color 0.25s ease;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 1rem;
+            right: 1rem;
+            height: 2px;
+            background: var(--farm-terracotta);
+            border-radius: 2px;
+            transform: scaleX(0);
+            transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.4, 1);
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--farm-green) !important;
+        }
+
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            transform: scaleX(1);
+        }
+
+        /* ── ACTION ICONS (CART & WISHLIST) ── */
+        .nav-action-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-left: 1rem;
+        }
+
+        .nav-icon-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: var(--farm-cream);
+            border: 1.5px solid rgba(38, 70, 52, 0.18);
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            position: relative;
+            color: var(--farm-green);
+        }
+
+        .nav-icon-btn:hover {
+            background: var(--farm-green);
+            color: var(--farm-cream);
+            border-color: var(--farm-green);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(38, 70, 52, 0.15);
+        }
+
+        .nav-icon-btn svg {
+            width: 17px;
+            height: 17px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .nav-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            min-width: 18px;
+            height: 18px;
+            border-radius: 999px;
+            background: var(--farm-terracotta);
+            color: #FAF7EE;
+            font-family: 'Jost', sans-serif;
+            font-size: 0.62rem;
+            font-weight: 600;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px;
+            box-shadow: 0 2px 6px rgba(200, 90, 50, 0.4);
+            border: 2px solid var(--farm-cream);
+        }
+
+        .nav-badge.visible {
+            display: flex;
+        }
+
+        /* ── USER MENU & DROPDOWN ── */
+        .nav-user {
+            position: relative;
+            margin-left: 0.5rem;
+        }
+
+        .nav-user-pill {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.3rem 0.8rem 0.3rem 0.35rem;
+            background: rgba(38, 70, 52, 0.06);
+            border: 1px solid rgba(38, 70, 52, 0.14);
+            border-radius: 999px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .nav-user-pill:hover {
+            background: rgba(38, 70, 52, 0.1);
+            border-color: var(--farm-green);
+        }
+
+        .user-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--farm-green);
+            color: var(--farm-cream);
+            font-family: 'Fraunces', serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-transform: uppercase;
+        }
+
+        .user-name {
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            color: var(--farm-green);
+            text-transform: capitalize;
+        }
+
+        .user-dropdown {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            min-width: 200px;
+            background: var(--farm-cream);
+            border: 1px solid rgba(38, 70, 52, 0.14);
+            border-radius: 12px;
+            box-shadow: 0 16px 40px rgba(38, 70, 52, 0.12);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(8px);
+            transition: all 0.25s cubic-bezier(0.2, 0.8, 0.4, 1);
+            z-index: 999;
+            overflow: hidden;
+        }
+
+        .nav-user:hover .user-dropdown,
+        .nav-signin:hover .user-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .user-dropdown-header {
+            padding: 0.9rem 1.2rem;
+            background: rgba(38, 70, 52, 0.04);
+            border-bottom: 1px solid rgba(38, 70, 52, 0.08);
+        }
+
+        .user-dropdown-header .ud-name {
+            font-family: 'Fraunces', serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--farm-green);
+        }
+
+        .user-dropdown-header .ud-email {
+            font-size: 0.7rem;
+            color: var(--farm-soil-light);
+            margin-top: 0.1rem;
+        }
+
+        .user-dropdown a,
+        .user-dropdown button {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            padding: 0.7rem 1.2rem;
+            font-family: 'Jost', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--farm-soil-mid);
+            text-decoration: none;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            border-bottom: 1px solid rgba(38, 70, 52, 0.05);
+            transition: all 0.2s ease;
+        }
+
+        .user-dropdown a:hover,
+        .user-dropdown button:hover {
+            background: rgba(38, 70, 52, 0.07);
+            color: var(--farm-green);
+            padding-left: 1.4rem;
+        }
+
+        .user-dropdown a svg,
+        .user-dropdown button svg {
+            width: 14px;
+            height: 14px;
+            stroke: currentColor;
+            flex-shrink: 0;
+        }
+
+        .user-dropdown .logout-btn {
+            color: var(--farm-terracotta) !important;
+        }
+
+        .user-dropdown .logout-btn:hover {
+            background: rgba(200, 90, 50, 0.08) !important;
+        }
+
+        /* ── SIGN IN PILL ── */
+        .btn-farm-signin {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            background: var(--farm-green);
+            color: var(--farm-cream) !important;
+            padding: 0.45rem 1.15rem;
+            border-radius: 999px;
+            font-size: 0.73rem;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            box-shadow: 0 2px 8px rgba(38, 70, 52, 0.2);
+        }
+
+        .btn-farm-signin:hover {
+            background: var(--farm-green-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(38, 70, 52, 0.3);
+        }
+
+        /* ── TOAST ALERT SYSTEM ── */
+        .farm-toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--farm-green-dark);
+            color: var(--farm-cream);
+            padding: 0.85rem 1.35rem;
+            border-radius: 10px;
+            box-shadow: 0 12px 36px rgba(26, 51, 37, 0.35);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.82rem;
+            font-family: 'Jost', sans-serif;
+            font-weight: 400;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.35s cubic-bezier(0.2, 0.8, 0.4, 1);
+            z-index: 2000;
+            border: 1px solid rgba(250, 247, 238, 0.15);
+        }
+
+        .farm-toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .farm-toast-icon {
+            color: var(--farm-gold);
+            font-size: 1.1rem;
+        }
+
+        /* ── STAR RATINGS ── */
+        .star-rating {
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+            color: var(--farm-gold);
+        }
+
+        .star-rating .star {
+            width: 13px;
+            height: 13px;
+            flex-shrink: 0;
+        }
+
+        .star-full {
+            fill: currentColor;
+            stroke: currentColor;
+        }
+
+        .star-half {
+            stroke-width: 1.5;
+        }
+
+        .star-empty {
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.5;
+            opacity: 0.3;
+        }
+
+        .star-value {
+            font-family: 'Jost', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 500;
+            color: var(--farm-soil-mid);
+            margin-left: 4px;
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            background-color: var(--farm-green-dark);
+            color: rgba(250, 247, 238, 0.75);
+            padding: 4.5rem 0 2rem;
+            margin-top: 5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 10% 20%, rgba(58, 107, 75, 0.18) 0%, transparent 50%),
+                        radial-gradient(circle at 90% 80%, rgba(200, 90, 50, 0.1) 0%, transparent 45%);
+            pointer-events: none;
+        }
+
+        .footer-trust-strip {
+            border-bottom: 1px solid rgba(250, 247, 238, 0.1);
+            padding-bottom: 3rem;
+            margin-bottom: 3.5rem;
+        }
+
+        .trust-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .trust-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(250, 247, 238, 0.08);
+            border: 1px solid rgba(250, 247, 238, 0.15);
+            color: var(--farm-gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .trust-title {
+            font-family: 'Fraunces', serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--farm-cream);
+            margin-bottom: 0.2rem;
+        }
+
+        .trust-desc {
+            font-size: 0.76rem;
+            color: rgba(250, 247, 238, 0.6);
+            line-height: 1.5;
+        }
+
+        .footer-brand-title {
+            font-family: 'Fraunces', serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--farm-cream);
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-brand-title em {
+            font-style: italic;
+            font-family: 'Cormorant Garamond', serif;
+            color: var(--farm-gold);
+        }
+
+        .footer-desc {
+            font-size: 0.82rem;
+            line-height: 1.8;
+            color: rgba(250, 247, 238, 0.65);
+        }
+
+        footer h6 {
+            font-family: 'Jost', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--farm-gold);
+            margin-bottom: 1.25rem;
+        }
+
+        footer ul li {
+            margin-bottom: 0.6rem;
+        }
+
+        footer a {
+            color: rgba(250, 247, 238, 0.7) !important;
+            text-decoration: none;
+            font-size: 0.82rem;
+            transition: color 0.2s ease, padding-left 0.2s ease;
+        }
+
+        footer a:hover {
+            color: var(--farm-cream) !important;
+            padding-left: 0.3rem;
+        }
+
+        .footer-divider {
+            border: none;
+            border-top: 1px solid rgba(250, 247, 238, 0.1);
+            margin: 3rem 0 1.5rem;
+        }
+
+        .footer-copy {
+            font-size: 0.72rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: rgba(250, 247, 238, 0.4);
+            text-align: center;
+        }
+
+        /* ── SCROLL REVEAL ANIMATIONS ── */
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.2, 0.8, 0.4, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- TOP FRESHNESS BAR -->
+    <div class="top-fresh-bar">
+        <div>🌿 <strong>Morning Harvest:</strong> Sourced fresh at 5:00 AM daily from local organic farms</div>
+        <div>•</div>
+        <div><span class="badge-pill">Free Delivery</span> On orders above ₹499</div>
+        <div>•</div>
+        <div>🌱 100% Pesticide-Free & Recycled Kraft Packaging</div>
+    </div>
+
+    <!-- MAIN NAVBAR -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+
+            <!-- Brand Logo & Title -->
+            <a class="navbar-brand" href="{% if user.is_authenticated %}{% url 'marketplace' %}{% else %}{% url 'home' %}{% endif %}">
+                <div class="brand-logo-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 2L9.5 8.5C8 12.5 5 15 2 16c3.5 1 7.5 0 10-3 2.5 3 6.5 4 10 3-3-1-6-3.5-7.5-7.5L12 2z"></path>
+                        <path d="M12 13v9"></path>
+                    </svg>
+                </div>
+                <div class="brand-text-wrap">
+                    <div class="brand-title">Harvest <em>& Co.</em></div>
+                    <div class="brand-tagline">Artisanal Organic Grocer</div>
+                </div>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#farmNavbar" style="border: 1px solid rgba(38,70,52,0.25); border-radius: 8px;">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="farmNavbar">
+                <ul class="navbar-nav ms-auto align-items-lg-center">
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'marketplace' %}">Marketplace</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'about' %}">Our Farms</a>
+                    </li>
+
+                    <!-- WISHLIST & CART ACTION ICONS -->
+                    <li class="nav-item">
+                        <div class="nav-action-wrap">
+                            <!-- Wishlist -->
+                            <a href="{% url 'wishlist' %}" class="nav-icon-btn" title="My Wishlist">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                </svg>
+                                <span class="nav-badge {% if wishlist_count %}visible{% endif %}" id="navWishlistBadge">
+                                    {{ wishlist_count|default:'' }}
+                                </span>
+                            </a>
+
+                            <!-- Cart Basket -->
+                            <a href="{% url 'cart' %}" class="nav-icon-btn" title="Grocery Basket">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                                    <path d="M16 10a4 4 0 0 1-8 0"></path>
+                                </svg>
+                                <span class="nav-badge {% if cart_count %}visible{% endif %}" id="navCartBadge">
+                                    {{ cart_count|default:'' }}
+                                </span>
+                            </a>
+                        </div>
+                    </li>
+
+                    {% if user.is_authenticated %}
+                    <!-- LOGGED IN: Profile pill + Dropdown -->
+                    <li class="nav-item nav-user">
+                        <div class="nav-user-pill">
+                            <div class="user-avatar">{{ user.first_name|first|default:user.username|first }}</div>
+                            <span class="user-name">{{ user.first_name|default:user.username }}</span>
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div>
+                        <div class="user-dropdown">
+                            <div class="user-dropdown-header">
+                                <div class="ud-name">{{ user.get_full_name|default:user.username }}</div>
+                                <div class="ud-email">{{ user.email|default:"Farm Member" }}</div>
+                            </div>
+                            <a href="{% url 'profile' %}">
+                                <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                                Farm Profile
+                            </a>
+                            <a href="{% url 'orders' %}">
+                                <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                </svg>
+                                Harvest Orders
+                            </a>
+                            <form method="post" action="{% url 'logout' %}" style="margin: 0;">
+                                {% csrf_token %}
+                                <button type="submit" class="logout-btn">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                        <polyline points="16 17 21 12 16 7"></polyline>
+                                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                                    </svg>
+                                    Sign Out
+                                </button>
+                            </form>
+                        </div>
+                    </li>
+                    {% else %}
+                    <!-- NOT LOGGED IN: Sign In / Join -->
+                    <li class="nav-item nav-signin" style="position: relative; margin-left: 0.5rem;">
+                        <a href="{% url 'login' %}" class="btn-farm-signin">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                                <polyline points="10 17 15 12 10 7"></polyline>
+                                <line x1="15" y1="12" x2="3" y2="12"></line>
+                            </svg>
+                            Member Sign In
+                        </a>
+                        <div class="user-dropdown" style="min-width: 170px;">
+                            <a href="{% url 'login' %}">Sign In</a>
+                            <a href="{% url 'signup' %}">Create Farm Account</a>
+                        </div>
+                    </li>
+                    {% endif %}
+
+                </ul>
+            </div>
+
+        </div>
+    </nav>
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div class="farm-toast" id="farmToast">
+        <span class="farm-toast-icon">🌱</span>
+        <span id="farmToastMsg">Added to your harvest basket!</span>
+    </div>
+
+    <!-- MAIN PAGE CONTENT -->
+    <div class="page-wrapper">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+
+            <!-- Trust Features Strip -->
+            <div class="row g-4 footer-trust-strip">
+                <div class="col-6 col-md-3">
+                    <div class="trust-item">
+                        <div class="trust-icon">🌱</div>
+                        <div>
+                            <div class="trust-title">100% Organic</div>
+                            <div class="trust-desc">Certified chemical-free, natural bio-farming</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="trust-item">
+                        <div class="trust-icon">🚜</div>
+                        <div>
+                            <div class="trust-title">Direct from Farms</div>
+                            <div class="trust-desc">Fair wages, harvested fresh at 5:00 AM</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="trust-item">
+                        <div class="trust-icon">📦</div>
+                        <div>
+                            <div class="trust-title">Plastic-Free Pack</div>
+                            <div class="trust-desc">100% Biodegradable kraft paper & cotton twine</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="trust-item">
+                        <div class="trust-icon">🚚</div>
+                        <div>
+                            <div class="trust-title">Cold-Chain Delivery</div>
+                            <div class="trust-desc">From farm to your doorstep in 4-6 hours</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-5">
+                <!-- Brand Manifesto -->
+                <div class="col-md-4">
+                    <div class="footer-brand-title">Harvest <em>& Co.</em></div>
+                    <p class="footer-desc">
+                        Nourishing communities with wholesome, soil-grown produce, stone-ground flours, cold-pressed oils, and artisanal pantry staples directly from trusted local growers.
+                    </p>
+                </div>
+
+                <!-- Navigation -->
+                <div class="col-md-2 col-6">
+                    <h6>The Pantry</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="{% url 'marketplace' %}">All Produce</a></li>
+                        <li><a href="{% url 'marketplace' %}?sort=sale">Seasonal Deals</a></li>
+                        <li><a href="{% url 'about' %}">Our Soil & Farmers</a></li>
+                        <li><a href="{% url 'wishlist' %}">Saved Favorites</a></li>
+                    </ul>
+                </div>
+
+                <!-- Farm Support -->
+                <div class="col-md-3 col-6">
+                    <h6>Customer Care</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="{% url 'orders' %}">Track Fresh Delivery</a></li>
+                        <li><a href="#">Organic Certifications</a></li>
+                        <li><a href="#">Packaging & Recycling</a></li>
+                        <li><a href="#">Farm Partner Inquiries</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact & Location -->
+                <div class="col-md-3">
+                    <h6>Farm Gate Contact</h6>
+                    <p class="footer-desc">
+                        📍 Western Ghats & Ooty Valleys<br>
+                        ✉️ harvest@thefarmpantry.com<br>
+                        📞 +91 (042) 489-0120<br>
+                        <span style="font-family: 'Caveat', cursive; font-size: 1rem; color: var(--farm-gold);">Open daily 6 AM — 8 PM</span>
+                    </p>
+                </div>
+            </div>
+
+            <hr class="footer-divider">
+
+            <p class="footer-copy">
+                © 2026 Harvest & Co. Artisanal Grocers • Cultivated with Care & Respect for Soil
+            </p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Global Farm Toast & Scroll Reveal Script -->
+    <script>
+        function showFarmToast(msg = 'Added to harvest basket!', icon = '🌱') {
+            const toast = document.getElementById('farmToast');
+            const msgEl = document.getElementById('farmToastMsg');
+            if (toast && msgEl) {
+                msgEl.innerText = msg;
+                toast.querySelector('.farm-toast-icon').innerText = icon;
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2600);
+            }
+        }
+
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            if (navbar) {
+                navbar.classList.toggle('scrolled', window.scrollY > 15);
+            }
+        });
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>

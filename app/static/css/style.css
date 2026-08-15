@@ -1,0 +1,415 @@
+/* ═══════════════════════════════════════════════════════════════════
+   HARVEST & CO. — Artisanal Farm-to-Table Master Design System
+   ═══════════════════════════════════════════════════════════════════ */
+
+:root {
+    --farm-green: #264634;
+    --farm-green-dark: #1A3325;
+    --farm-green-light: #3A6B4B;
+    --farm-green-soft: #EBF3ED;
+    --farm-cream: #FAF7EE;
+    --farm-cream-dark: #EFE8D6;
+    --farm-kraft: #F3ECE0;
+    --farm-terracotta: #C85A32;
+    --farm-terracotta-dark: #A44321;
+    --farm-gold: #D49B4B;
+    --farm-soil: #261E18;
+    --farm-soil-mid: #5A4D43;
+    --farm-soil-light: #9C8C80;
+    --farm-border: rgba(38, 70, 52, 0.12);
+    --farm-shadow-sm: 0 2px 8px rgba(38, 70, 52, 0.06);
+    --farm-shadow-md: 0 8px 24px rgba(38, 70, 52, 0.08);
+    --farm-shadow-lg: 0 16px 40px rgba(38, 70, 52, 0.12);
+
+    /* Compatibility aliases */
+    --sandal: var(--farm-cream);
+    --sandal-dark: var(--farm-cream-dark);
+    --brown: var(--farm-green);
+    --brown-dark: var(--farm-green-dark);
+    --brown-light: var(--farm-green-light);
+    --text-dark: var(--farm-soil);
+    --text-mid: var(--farm-soil-mid);
+    --text-light: var(--farm-soil-light);
+}
+
+/* ── GLOBAL RESETS & TYPOGRAPHY ── */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--farm-cream);
+    color: var(--farm-soil);
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    line-height: 1.6;
+    letter-spacing: 0.01em;
+    background-image: radial-gradient(rgba(38, 70, 52, 0.035) 1px, transparent 1px);
+    background-size: 24px 24px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    color: var(--farm-green);
+    line-height: 1.2;
+}
+
+h1 em, h2 em, h3 em {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 400;
+    color: var(--farm-terracotta);
+}
+
+a {
+    color: var(--farm-green);
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+a:hover {
+    color: var(--farm-terracotta);
+}
+
+/* ── BUTTONS ── */
+.btn-harvest-main,
+.btn-farm-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: var(--farm-terracotta);
+    color: #FAF7EE !important;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 0.85rem 1.75rem;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    box-shadow: 0 4px 14px rgba(200, 90, 50, 0.28);
+    transition: all 0.25s cubic-bezier(0.2, 0.8, 0.4, 1);
+}
+
+.btn-harvest-main:hover,
+.btn-farm-primary:hover {
+    background: var(--farm-terracotta-dark);
+    color: #FAF7EE !important;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgba(200, 90, 50, 0.38);
+}
+
+.btn-farm-green {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: var(--farm-green);
+    color: #FAF7EE !important;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 0.85rem 1.75rem;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    box-shadow: 0 4px 14px rgba(38, 70, 52, 0.2);
+    transition: all 0.25s ease;
+}
+
+.btn-farm-green:hover {
+    background: var(--farm-green-dark);
+    color: #FAF7EE !important;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(38, 70, 52, 0.3);
+}
+
+.btn-harvest-outline,
+.btn-farm-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: transparent;
+    color: var(--farm-green) !important;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 0.85rem 1.75rem;
+    border-radius: 999px;
+    border: 1.5px solid rgba(38, 70, 52, 0.25);
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.25s ease;
+}
+
+.btn-harvest-outline:hover,
+.btn-farm-outline:hover {
+    background: var(--farm-green);
+    color: #FAF7EE !important;
+    border-color: var(--farm-green);
+    transform: translateY(-2px);
+}
+
+/* ── FORM ELEMENTS ── */
+.farm-form-group,
+.farm-form-row {
+    margin-bottom: 1.25rem;
+}
+
+.farm-label {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--farm-soil-mid);
+    margin-bottom: 0.45rem;
+    display: block;
+}
+
+.farm-input,
+.farm-textarea,
+.farm-select {
+    width: 100%;
+    background: #FAF7EE;
+    border: 1.5px solid rgba(38, 70, 52, 0.18);
+    border-radius: 10px;
+    padding: 0.8rem 1.1rem;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.9rem;
+    color: var(--farm-soil);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+}
+
+.farm-input::placeholder,
+.farm-textarea::placeholder {
+    color: rgba(90, 77, 67, 0.45);
+}
+
+.farm-input:focus,
+.farm-textarea:focus,
+.farm-select:focus {
+    border-color: var(--farm-green);
+    background: #FFFFFF;
+    box-shadow: 0 0 0 3px rgba(38, 70, 52, 0.1);
+}
+
+/* ── CARDS (HARVEST SPECIMEN CARDS) ── */
+.mp-farm-card,
+.farm-product-card {
+    background: #F6F1E8;
+    border: 1px solid rgba(38, 70, 52, 0.12);
+    border-radius: 16px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: all 0.35s cubic-bezier(0.2, 0.8, 0.4, 1);
+}
+
+.mp-farm-card:hover,
+.farm-product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--farm-shadow-lg);
+    border-color: rgba(38, 70, 52, 0.25);
+}
+
+.mp-card-img-box,
+.farm-card-media {
+    position: relative;
+    aspect-ratio: 1.05;
+    overflow: hidden;
+    background: #EFE8DA;
+}
+
+.mp-card-img-box img,
+.farm-card-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.4, 1);
+}
+
+.mp-farm-card:hover .mp-card-img-box img,
+.farm-product-card:hover .farm-card-media img {
+    transform: scale(1.08);
+}
+
+.mp-badge-harvest,
+.farm-card-badge {
+    position: absolute;
+    top: 0.85rem;
+    left: 0.85rem;
+    padding: 0.25rem 0.65rem;
+    border-radius: 6px;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    z-index: 2;
+}
+
+.badge-sale {
+    background: var(--farm-terracotta);
+    color: #FAF7EE;
+}
+
+.badge-organic {
+    background: var(--farm-green);
+    color: #FAF7EE;
+}
+
+.mp-wish-btn,
+.farm-wish-btn {
+    position: absolute;
+    top: 0.85rem;
+    right: 0.85rem;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(250, 247, 238, 0.92);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 2;
+    transition: all 0.2s ease;
+    color: var(--farm-soil-light);
+    backdrop-filter: blur(6px);
+}
+
+.mp-wish-btn:hover,
+.mp-wish-btn.wishlisted,
+.farm-wish-btn:hover,
+.farm-wish-btn.wishlisted {
+    background: #FAF7EE;
+    color: var(--farm-terracotta);
+    transform: scale(1.1);
+}
+
+.mp-wish-btn.wishlisted svg,
+.farm-wish-btn.wishlisted svg {
+    fill: var(--farm-terracotta);
+    stroke: var(--farm-terracotta);
+}
+
+.mp-card-details,
+.farm-card-body {
+    padding: 1.25rem 1.25rem 1.4rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.mp-card-tags,
+.farm-card-cat {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--farm-soil-light);
+    margin-bottom: 0.35rem;
+}
+
+.mp-card-title,
+.farm-card-title {
+    font-family: 'Fraunces', serif;
+    font-size: 1.22rem;
+    font-weight: 600;
+    color: var(--farm-green);
+    text-decoration: none;
+    line-height: 1.25;
+    margin-bottom: 0.4rem;
+}
+
+.mp-card-title:hover,
+.farm-card-title:hover {
+    color: var(--farm-terracotta);
+}
+
+.mp-card-footer,
+.farm-card-price-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 0.85rem;
+    margin-bottom: 1.1rem;
+    border-top: 1px dashed rgba(38, 70, 52, 0.12);
+}
+
+.mp-price-tag,
+.farm-price-val {
+    font-family: 'Fraunces', serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--farm-soil);
+}
+
+.mp-btn-add,
+.btn-add-basket {
+    width: 100%;
+    background: var(--farm-green);
+    color: #FAF7EE;
+    border: none;
+    border-radius: 999px;
+    padding: 0.75rem 1rem;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.25s ease;
+}
+
+.mp-btn-add:hover,
+.btn-add-basket:hover {
+    background: var(--farm-green-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(38, 70, 52, 0.25);
+}
+
+.mp-btn-add.in-cart,
+.btn-add-basket.in-cart {
+    background: var(--farm-green-light);
+}
+
+/* ── ALERT BOXES ── */
+.farm-alert-error {
+    background: rgba(200, 90, 50, 0.1);
+    border-left: 3px solid var(--farm-terracotta);
+    color: var(--farm-terracotta-dark);
+    padding: 0.85rem 1.15rem;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    margin-bottom: 1.5rem;
+}
+
+.farm-alert-success {
+    background: var(--farm-green-soft);
+    border-left: 3px solid var(--farm-green);
+    color: var(--farm-green-dark);
+    padding: 0.85rem 1.15rem;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    margin-bottom: 1.5rem;
+}

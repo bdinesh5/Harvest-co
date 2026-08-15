@@ -1,0 +1,344 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Farm Checkout — Harvest & Co.{% endblock %}
+
+{% block content %}
+<style>
+    .co-page-wrap {
+        padding: 4rem 0 6rem;
+    }
+
+    .co-header-title {
+        font-family: 'Fraunces', serif;
+        font-size: clamp(2rem, 4vw, 2.8rem);
+        font-weight: 600;
+        color: var(--farm-green);
+        margin-bottom: 0.35rem;
+    }
+
+    .co-header-sub {
+        font-size: 0.88rem;
+        color: var(--farm-soil-light);
+        margin-bottom: 2.5rem;
+    }
+
+    .co-layout {
+        display: grid;
+        grid-template-columns: 1fr 380px;
+        gap: 3rem;
+        align-items: start;
+    }
+
+    /* Form Box */
+    .co-form-card {
+        background: #F6F1E8;
+        border: 1px solid rgba(38, 70, 52, 0.12);
+        border-radius: 16px;
+        padding: 2.25rem;
+    }
+
+    .co-section-title {
+        font-family: 'Fraunces', serif;
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: var(--farm-green);
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+    }
+
+    .co-grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.25rem;
+    }
+
+    .farm-form-group {
+        margin-bottom: 1.25rem;
+    }
+
+    .farm-label {
+        font-family: 'Jost', sans-serif;
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--farm-soil-mid);
+        margin-bottom: 0.4rem;
+        display: block;
+    }
+
+    .farm-input {
+        width: 100%;
+        background: var(--farm-cream);
+        border: 1.5px solid rgba(38, 70, 52, 0.18);
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        font-family: 'Jost', sans-serif;
+        font-size: 0.88rem;
+        color: var(--farm-soil);
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .farm-input:focus {
+        border-color: var(--farm-green);
+        box-shadow: 0 0 0 3px rgba(38, 70, 52, 0.1);
+    }
+
+    /* Payment Methods */
+    .payment-options {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .pay-card {
+        background: var(--farm-cream);
+        border: 1.5px solid rgba(38, 70, 52, 0.18);
+        border-radius: 10px;
+        padding: 1rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        transition: all 0.2s ease;
+    }
+
+    .pay-card:hover {
+        border-color: var(--farm-green);
+        background: rgba(38, 70, 52, 0.04);
+    }
+
+    .pay-card input[type="radio"] {
+        accent-color: var(--farm-green);
+        width: 16px;
+        height: 16px;
+    }
+
+    .pay-title {
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: var(--farm-soil);
+    }
+
+    /* Summary Receipt Box */
+    .co-summary-box {
+        background: #F3ECE0;
+        border: 1px solid rgba(38, 70, 52, 0.15);
+        border-radius: 16px;
+        padding: 2rem;
+    }
+
+    .co-sum-item {
+        display: flex;
+        align-items: center;
+        gap: 0.85rem;
+        padding: 0.75rem 0;
+        border-bottom: 1px dashed rgba(38, 70, 52, 0.1);
+    }
+
+    .co-sum-img {
+        width: 44px;
+        height: 44px;
+        border-radius: 8px;
+        object-fit: cover;
+    }
+
+    .co-sum-name {
+        flex: 1;
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--farm-soil);
+        line-height: 1.3;
+    }
+
+    .co-sum-price {
+        font-family: 'Fraunces', serif;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--farm-soil);
+    }
+
+    .btn-place-order {
+        width: 100%;
+        background: var(--farm-terracotta);
+        color: #FAF7EE;
+        border: none;
+        border-radius: 999px;
+        padding: 1.1rem;
+        font-family: 'Jost', sans-serif;
+        font-size: 0.82rem;
+        font-weight: 600;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.65rem;
+        margin-top: 1.5rem;
+        box-shadow: 0 8px 24px rgba(200, 90, 50, 0.35);
+        transition: all 0.3s ease;
+    }
+
+    .btn-place-order:hover {
+        background: var(--farm-terracotta-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 12px 30px rgba(200, 90, 50, 0.45);
+    }
+
+    @media (max-width: 991px) {
+        .co-layout {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="co-page-wrap">
+    <div class="container">
+
+        <h1 class="co-header-title">Fresh Doorstep <em>Checkout</em></h1>
+        <p class="co-header-sub">Confirm your organic harvest delivery address and preferred payment method.</p>
+
+        <form method="POST" action="{% url 'place_order' %}" class="co-layout">
+            {% csrf_token %}
+
+            <!-- Left: Delivery Details & Payment -->
+            <div class="co-form-card">
+                <div class="co-section-title">
+                    <span>📍</span>
+                    <span>1. Delivery Destination</span>
+                </div>
+
+                <div class="farm-form-group">
+                    <label class="farm-label" for="full_name">Full Name</label>
+                    <input class="farm-input" type="text" id="full_name" name="full_name"
+                           value="{{ user.get_full_name|default:user.username }}" required>
+                </div>
+
+                <div class="co-grid-2">
+                    <div class="farm-form-group">
+                        <label class="farm-label" for="phone">Phone Number</label>
+                        <input class="farm-input" type="tel" id="phone" name="phone"
+                               value="{{ profile.phone }}" placeholder="e.g. 98765 43210" required>
+                    </div>
+                    <div class="farm-form-group">
+                        <label class="farm-label" for="pincode">Pincode / Postal Code</label>
+                        <input class="farm-input" type="text" id="pincode" name="pincode"
+                               placeholder="e.g. 600001" required>
+                    </div>
+                </div>
+
+                <div class="farm-form-group">
+                    <label class="farm-label" for="address">Street Address / House / Flat</label>
+                    <textarea class="farm-input" id="address" name="address" rows="2"
+                              placeholder="House name, street, landmark" required>{{ profile.address }}</textarea>
+                </div>
+
+                <div class="co-grid-2">
+                    <div class="farm-form-group">
+                        <label class="farm-label" for="city">City / District</label>
+                        <input class="farm-input" type="text" id="city" name="city"
+                               value="{{ profile.city|default:'Chennai' }}" required>
+                    </div>
+                    <div class="farm-form-group">
+                        <label class="farm-label" for="state">State</label>
+                        <input class="farm-input" type="text" id="state" name="state"
+                               value="{{ profile.state|default:'Tamil Nadu' }}" required>
+                    </div>
+                </div>
+
+                <div class="co-section-title" style="margin-top: 2rem;">
+                    <span>💳</span>
+                    <span>2. Payment Choice</span>
+                </div>
+
+                <div class="payment-options">
+                    <label class="pay-card">
+                        <input type="radio" name="payment_method" value="upi" checked>
+                        <div>
+                            <div class="pay-title">UPI / QR Pay</div>
+                            <div style="font-size: 0.72rem; color: var(--farm-soil-light);">GPay, PhonePe, Paytm</div>
+                        </div>
+                    </label>
+
+                    <label class="pay-card">
+                        <input type="radio" name="payment_method" value="cod">
+                        <div>
+                            <div class="pay-title">Cash on Delivery</div>
+                            <div style="font-size: 0.72rem; color: var(--farm-soil-light);">Pay at doorstep</div>
+                        </div>
+                    </label>
+
+                    <label class="pay-card">
+                        <input type="radio" name="payment_method" value="card">
+                        <div>
+                            <div class="pay-title">Debit / Credit Card</div>
+                            <div style="font-size: 0.72rem; color: var(--farm-soil-light);">Visa, Mastercard, RuPay</div>
+                        </div>
+                    </label>
+
+                    <label class="pay-card">
+                        <input type="radio" name="payment_method" value="gpay">
+                        <div>
+                            <div class="pay-title">Google Pay Direct</div>
+                            <div style="font-size: 0.72rem; color: var(--farm-soil-light);">Instant checkout</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Right: Order Basket Summary -->
+            <div class="co-summary-box">
+                <h3 style="font-family: 'Fraunces', serif; font-size: 1.3rem; color: var(--farm-green); margin-bottom: 1.25rem;">
+                    Harvest Summary
+                </h3>
+
+                <div style="max-height: 280px; overflow-y: auto; margin-bottom: 1.25rem;">
+                    {% for item in items %}
+                    <div class="co-sum-item">
+                        {% if item.product.image %}
+                        <img class="co-sum-img" src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                        {% else %}
+                        <div style="width: 44px; height: 44px; border-radius: 8px; background: #EFE8DA; display: flex; align-items: center; justify-content: center;">🌱</div>
+                        {% endif %}
+                        <div class="co-sum-name">
+                            {{ item.product.name }}
+                            <div style="font-size: 0.72rem; color: var(--farm-soil-light);">× {{ item.quantity }}</div>
+                        </div>
+                        <div class="co-sum-price">₹{{ item.get_subtotal }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div style="display: flex; justify-content: space-between; font-size: 0.88rem; color: var(--farm-soil-mid); margin-bottom: 0.6rem;">
+                    <span>Subtotal</span>
+                    <span>₹{{ total }}</span>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; font-size: 0.88rem; color: var(--farm-soil-mid); margin-bottom: 1rem;">
+                    <span>Refrigerated Delivery</span>
+                    <span>₹{{ delivery }}</span>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: baseline; font-family: 'Fraunces', serif; font-size: 1.45rem; font-weight: 700; color: var(--farm-green); border-top: 2px dashed rgba(38,70,52,0.18); padding-top: 1rem;">
+                    <span>Total Amount</span>
+                    <span>₹{{ grand_total }}</span>
+                </div>
+
+                <button type="submit" class="btn-place-order">
+                    <span>Confirm Harvest Order</span>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+{% endblock %}
