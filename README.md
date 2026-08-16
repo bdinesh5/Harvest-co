@@ -9,9 +9,9 @@
   <img src="https://img.shields.io/badge/JavaScript-ES6-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript">
 </p>
 
-## 🎨 Interface & Feature Showcase
+## ◩ Interface & Feature Showcase
 
-### 🖼️ Brand Landing Page
+### ◪ Brand Landing Page
 ![Hero Section](docs/hero.png)
 
 * **Visual Identity & Aesthetics**: Features a modern, clean aesthetic tuned with tailored brand colors to present a crisp, premium identity for modern organic produce shopping.
@@ -19,7 +19,7 @@
 
 ---
 
-### 🥬 Product Catalog Overview
+### ◩ Product Catalog Overview
 ![Home Page Catalog](docs/homepage.png)
 
 * **Dynamic Grid Layout**: Responsive item organization displaying real-time pricing, stock indicators, and crisp visual cards.
@@ -27,7 +27,7 @@
 
 ---
 
-### 🔍 Detailed Item View
+### ◪ Detailed Item View
 ![Product Detail View](docs/product.png)
 
 * **In-Depth Product Specs**: Highlights detailed descriptions, net weight/volume, inventory availability status, and pricing breakdowns.
@@ -35,7 +35,7 @@
 
 ---
 
-### ❤️ Saved Favorites
+### ◩ Saved Favorites
 ![Wishlist Page](docs/wishlist.png)
 
 * **User Wishlist Hub**: Dedicated section enabling registered shoppers to bookmark items for future purchases.
@@ -43,7 +43,7 @@
 
 ---
 
-### 🛒 Real-Time Cart System
+### ◪ Real-Time Cart System
 ![Cart System](docs/cart.png)
 
 * **Dynamic Price Calculations**: Automatically updates sub-totals, delivery estimates, taxes, and grand totals upon item modifications.
@@ -51,7 +51,7 @@
 
 ---
 
-### 📦 Order History & Tracking
+### ◩ Order History & Tracking
 ![Order History Page](docs/orders.png)
 
 * **Purchase Log**: Complete customer order tracking panel detailing past transactions, itemized receipts, and order timestamps.
@@ -59,7 +59,7 @@
 
 ---
 
-### 🛠️ Django Admin Control Center
+### ❁ Django Admin Control Center
 ![Django Admin Dashboard](docs/django.png)
 
 * **Backend Inventory Management**: Administrative interface for managing product catalog models, inventory levels, category schemas, and customer orders.
@@ -67,7 +67,7 @@
 
 ---
 
-## 🧩 Architecture Overview
+## ⌘ Architecture Overview
 
 * 🐍 **Backend Core**: Django 6.0 + Clean MVC Architecture
 * 🔐 **Authentication**: Secure user session handling and role-based access control
@@ -77,6 +77,6 @@
 
 ---
 
-## 🚀 Why This Project?
+## ☞ Why This Project?
 
 Built to handle the real-world complexities of modern retail platforms—dynamic pricing, perishable stock management, seamless cart operations, and administrative inventory control—all wrapped in a clean, high-performance architecture.
