@@ -1,6 +1,6 @@
 # ❁ Harvest & Co.
 
-**❯ 🐍 Scalable grocery commerce & inventory orchestration — built with Python & Django.**
+**❯ Scalable grocery commerce & inventory orchestration — built with Python & Django.**
 
 ---
 
