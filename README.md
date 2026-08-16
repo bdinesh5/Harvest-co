@@ -1,6 +1,6 @@
 # ❁ Harvest & Co.
 
-**❯ Scalable grocery commerce & inventory orchestration — built with 🐍 Python & Django.**
+**❯ 🐍 Scalable grocery commerce & inventory orchestration — built with Python & Django.**
 
 ---
 
@@ -14,7 +14,7 @@
 
 ## ◩ Interface & Feature Showcase
 
-### Ⅰ Brand Landing Page
+### Ⅰ  Brand Landing Page
 
 ![Hero Section](docs/hero.png)
 
@@ -24,7 +24,7 @@
 
 ---
 
-### Ⅱ Product Catalog Overview
+### Ⅱ  Product Catalog Overview
 
 ![Home Page Catalog](docs/homepage.png)
 
@@ -34,7 +34,7 @@
 
 ---
 
-### Ⅲ Detailed Item View
+### Ⅲ  Detailed Item View
 
 ![Product Detail View](docs/product.png)
 
@@ -44,7 +44,7 @@
 
 ---
 
-### Ⅳ Saved Favorites
+### Ⅳ  Saved Favorites
 
 ![Wishlist Page](docs/wishlist.png)
 
@@ -54,7 +54,7 @@
 
 ---
 
-### Ⅴ Real-Time Cart System
+### Ⅴ  Real-Time Cart System
 
 ![Cart System](docs/cart.png)
 
@@ -64,7 +64,7 @@
 
 ---
 
-### Ⅵ Order History & Tracking
+### Ⅵ  Order History & Tracking
 
 ![Order History Page](docs/orders.png)
 
@@ -74,7 +74,7 @@
 
 ---
 
-### Ⅶ ❁ Django Admin Control Center
+### Ⅶ  Django Admin Control Center
 
 ![Django Admin Dashboard](docs/django.png)
 
