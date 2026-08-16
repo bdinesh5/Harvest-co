@@ -3,6 +3,11 @@
 **⚡ Scalable grocery commerce & inventory orchestration — built with Django.**
 
 ---
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.10%2B-blue?style=for-the-badge&logo=python&logoColor=white" alt="Python">
+  <img src="https://img.shields.io/badge/Django-Framework-092E20?style=for-the-badge&logo=django&logoColor=white" alt="Django">
+  <img src="https://img.shields.io/badge/JavaScript-ES6-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript">
+</p>
 
 ## 🎨 Interface & Feature Showcase
 
