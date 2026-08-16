@@ -1,82 +1,109 @@
-# 🌾 Harvest & Co.
+# ❁ Harvest & Co.
 
-**⚡ Scalable grocery commerce & inventory orchestration — built with Django.**
+**❯ Scalable grocery commerce & inventory orchestration — built with Python & Django.**
 
 ---
+
 <p align="center">
   <img src="https://img.shields.io/badge/Python-3.10%2B-blue?style=for-the-badge&logo=python&logoColor=white" alt="Python">
   <img src="https://img.shields.io/badge/Django-Framework-092E20?style=for-the-badge&logo=django&logoColor=white" alt="Django">
   <img src="https://img.shields.io/badge/JavaScript-ES6-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript">
 </p>
 
+---
+
 ## ◩ Interface & Feature Showcase
 
-### ◪ Brand Landing Page
-![Hero Section](docs/hero.png)
+### Ⅰ Brand Landing Page
 
-* **Visual Identity & Aesthetics**: Features a modern, clean aesthetic tuned with tailored brand colors to present a crisp, premium identity for modern organic produce shopping.
-* **Hero Banner**: High-impact introduction highlighting sustainable sourcing, seasonal promotions, and immediate call-to-action triggers for quick navigation.
+❯ **Visual Identity** — Clean, modern interface designed for a premium organic grocery experience.
 
----
-
-### ◩ Product Catalog Overview
-![Home Page Catalog](docs/homepage.png)
-
-* **Dynamic Grid Layout**: Responsive item organization displaying real-time pricing, stock indicators, and crisp visual cards.
-* **Smart Filtering & Navigation**: Instant filtering mechanisms allowing seamless switching between grocery categories, fresh produce, and pantry staples.
+❯ **Hero Banner** — Highlights sustainable sourcing, seasonal promotions, and direct shopping actions.
 
 ---
 
-### ◪ Detailed Item View
-![Product Detail View](docs/product.png)
+### Ⅱ Product Catalog
 
-* **In-Depth Product Specs**: Highlights detailed descriptions, net weight/volume, inventory availability status, and pricing breakdowns.
-* **Interactive Controls**: Direct controls for selecting quantities, adding items to active carts, or toggling favorites on the fly.
+❯ **Dynamic Catalog** — Responsive product grid with pricing, availability, stock indicators, and product imagery.
 
----
-
-### ◩ Saved Favorites
-![Wishlist Page](docs/wishlist.png)
-
-* **User Wishlist Hub**: Dedicated section enabling registered shoppers to bookmark items for future purchases.
-* **Quick-Transfer Actions**: One-click functionality to migrate saved items straight into the active shopping cart when ready.
+❯ **Smart Filtering** — Quick navigation across grocery categories, fresh produce, and pantry essentials.
 
 ---
 
-### ◪ Real-Time Cart System
-![Cart System](docs/cart.png)
+### Ⅲ Detailed Product View
 
-* **Dynamic Price Calculations**: Automatically updates sub-totals, delivery estimates, taxes, and grand totals upon item modifications.
-* **Session & Database Persistence**: Maintains cart state across sessions for logged-in users to ensure zero loss of selected inventory.
+❯ **Product Information** — Displays descriptions, quantity, pricing, and real-time inventory availability.
 
----
-
-### ◩ Order History & Tracking
-![Order History Page](docs/orders.png)
-
-* **Purchase Log**: Complete customer order tracking panel detailing past transactions, itemized receipts, and order timestamps.
-* **Fulfillment Status**: Visual indicators showing current processing stages from order placement to final delivery.
+❯ **Interactive Controls** — Supports quantity selection, cart actions, and wishlist management.
 
 ---
 
-### ❁ Django Admin Control Center
-![Django Admin Dashboard](docs/django.png)
+### Ⅳ Saved Favorites
 
-* **Backend Inventory Management**: Administrative interface for managing product catalog models, inventory levels, category schemas, and customer orders.
-* **Data Integrity**: Powered by relational integrity rules to prevent stock over-subscriptions and manage user permissions efficiently.
+❯ **Wishlist System** — Allows users to save products for future purchases.
+
+❯ **Quick Transfer** — Move saved products directly into the active shopping cart.
+
+---
+
+### Ⅴ Real-Time Cart System
+
+❯ **Dynamic Calculations** — Automatically updates subtotals, delivery charges, taxes, and final totals.
+
+❯ **Persistent Cart** — Maintains cart data across sessions for authenticated users.
+
+---
+
+### Ⅵ Order History & Tracking
+
+❯ **Purchase History** — Provides detailed records of previous orders, items, timestamps, and receipts.
+
+❯ **Fulfillment Status** — Tracks orders through processing, fulfillment, and delivery stages.
+
+---
+
+### Ⅶ ❁ Django Admin Control Center
+
+❯ **Inventory Management** — Manage products, categories, stock levels, users, and customer orders.
+
+❯ **Data Integrity** — Relational validation helps prevent stock inconsistencies and maintains secure user access.
 
 ---
 
 ## ⌘ Architecture Overview
 
-* 🐍 **Backend Core**: Django 6.0 + Clean MVC Architecture
-* 🔐 **Authentication**: Secure user session handling and role-based access control
-* 📦 **Inventory Engine**: Real-time stock tracking with relational validation
-* 🗄️ **Database Structure**: Relational SQLite / PostgreSQL setup built for fast catalog querying and transaction safety
-* 🎨 **Frontend Stack**: Dynamic Django Templating integrated with responsive UI styling
+❂ **Backend Core** — Python 3.10+ · Django 6.0
+
+❂ **Authentication** — Secure sessions with role-based access control.
+
+❂ **Inventory Engine** — Real-time stock tracking with relational validation.
+
+❂ **Database** — SQLite / PostgreSQL with relational data modeling and transaction-safe operations.
+
+❂ **Frontend** — Django Templates with responsive HTML, CSS, and JavaScript.
+
+❂ **Development** — AI-assisted development workflows for implementation, debugging, and optimization.
 
 ---
 
 ## ☞ Why This Project?
 
-Built to handle the real-world complexities of modern retail platforms—dynamic pricing, perishable stock management, seamless cart operations, and administrative inventory control—all wrapped in a clean, high-performance architecture.
+❯ **Real-World Commerce** — Designed around practical grocery retail workflows rather than a simple product showcase.
+
+❯ **Inventory First** — Focuses on accurate stock management, product availability, and order consistency.
+
+❯ **Complete Workflow** — Covers the customer journey from product discovery and cart management to checkout and order tracking.
+
+❯ **Admin Control** — Provides centralized management of products, inventory, categories, users, and orders.
+
+---
+
+## ❑ Core Highlights
+
+`Product Catalog` · `Inventory Management` · `Wishlist` · `Shopping Cart` · `Order Tracking` · `Authentication` · `Django Admin`
+
+---
+
+## ❯ Development Approach
+
+Built with a focus on **clean architecture, practical database design, responsive interfaces, and maintainable backend workflows**, with AI-assisted development used as a productivity and problem-solving aid.
